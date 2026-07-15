@@ -768,7 +768,7 @@ def side_card(depth, area_full):
 # ─────────────────────────────────────────────
 def build_index():
     title = f"{SITE['brand']} | 전국 배관공사·누수탐지·하수구막힘 24시간 출동"
-    desc = "전국 배관공사 전문 스피드 배관공사. 누수탐지·누수공사, 하수구·배관 막힘, 변기·수전 교체, 고압세척까지 24시간 신속 출동. 출동 전 비용 안내, 정품 자재 시공."
+    desc = "전국 배관공사·누수탐지·하수구막힘 전문. 변기·수전 교체, 고압세척까지 24시 긴급출동, 출동 전 비용 안내."
     parts = [head(title, desc, "index.html", extra_ld=ld_site() + ld_business())]
     parts.append(header(0))
 
