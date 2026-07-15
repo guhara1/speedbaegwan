@@ -244,6 +244,95 @@ def iter_units(sidoh):
             yield c["name"], None, c["unit"]
 
 # ─────────────────────────────────────────────
+# 콘텐츠 변주 (중복·도어웨이 방지)
+#  · 지역마다 결정적(deterministic)으로 다른 문장 조합을 선택해
+#    같은 문구가 통째로 반복되지 않도록 한다.
+#  · 지역 고유 사실(상위 행정구역·인접 동·포함 세부동·동 수·읍/면/동 특성)을
+#    본문에 실어 페이지마다 실제로 다른 정보를 담는다.
+# ─────────────────────────────────────────────
+import zlib
+
+def _hkey(*xs):
+    return zlib.crc32("|".join(str(x) for x in xs).encode("utf-8"))
+
+def pick(pool, *key):
+    """키에 따라 결정적으로 pool 원소 하나 선택."""
+    return pool[_hkey(*key) % len(pool)]
+
+def picks(pool, n, *key):
+    """키에 따라 결정적으로 서로 다른 n개 선택(순서도 지역마다 다름)."""
+    n = min(n, len(pool))
+    order = sorted(range(len(pool)), key=lambda i: _hkey(*key, i))
+    return [pool[i] for i in order[:n]]
+
+def area_kind(name):
+    """행정동 이름의 접미로 지역 성격을 추정(사실 기반 문구용)."""
+    if name.endswith("읍"):
+        return "읍내 상권과 주변 주택·농가가 함께 있어 노후 배관·정화조 관련 시공이 잦은 지역"
+    if name.endswith("면"):
+        return "여러 마을(리)로 이루어져 단독주택·농가의 급배수와 지하수 설비 문의가 많은 지역"
+    if name.endswith("가동"):
+        return "오래된 상가·업무용 건물이 밀집해 배관 노후와 영업장 긴급 시공 수요가 많은 지역"
+    if name.endswith("리"):
+        return "농어촌 마을 특성상 정화조·단독배관 시공이 많은 지역"
+    return "아파트 단지와 다세대·상가가 섞여 있어 누수·막힘 문의가 꾸준한 지역"
+
+# 소제목 앞 도입 문장(히어로 아래) — {area} {dong}
+DONG_INTRO = [
+    "{area}에서 누수가 의심되거나 하수구·변기·싱크대가 막혔다면 스피드 배관공사로 연락하세요. {dong} 인근에 신속 출동해 원인을 정확히 진단하고 재발 없이 시공합니다.",
+    "{dong} 일대에서 물이 새거나 잘 내려가지 않아 곤란하셨다면, {area} 어디든 빠르게 찾아가는 스피드 배관공사가 해결합니다. 진단 후 확정 견적을 먼저 알려드립니다.",
+    "{dong}에서 천장 얼룩·수도요금 급증·배수 지연 같은 신호를 느끼셨다면 초기 대응이 중요합니다. {area} 전역에 24시간 출동해 원인부터 정확히 잡아드립니다.",
+    "갑작스러운 누수·역류·막힘은 {dong}에서도 예고 없이 찾아옵니다. 스피드 배관공사는 {area}에 상시 대기하며 전화 한 통이면 가까운 기술자가 출동합니다.",
+    "{area}의 주택·상가 어디든, {dong}의 배관 고민은 스피드 배관공사가 맡습니다. 불필요한 철거 없이 원인만 짚어 최소 시공으로 마무리합니다.",
+    "{dong} 주민이라면 배관 문제로 더 미루지 마세요. 누수탐지·막힘 뚫음·설비 교체까지 {area} 현장에 맞춰 한 번에 처리하고 비용은 시공 전에 안내합니다.",
+]
+
+# 본문 첫 문단 — {area} {disp} {dong} {kind}
+DONG_OPEN = [
+    "{area}는 {kind}입니다. 오래된 주택부터 신축 건물까지 배관 상태가 제각각이라, 스피드 배관공사는 현장을 먼저 확인한 뒤 필요한 시공만 안내합니다.",
+    "{dong} 일대는 {kind}으로, 계절이 바뀌거나 사용량이 늘면 누수·막힘이 잦아집니다. 증상에 맞춰 장비와 방법을 골라 재발을 줄입니다.",
+    "{disp}에 속한 {dong}은(는) {kind}입니다. 같은 증상이라도 건물 구조에 따라 원인이 다르므로, 눈으로 확인한 뒤 정확히 처리합니다.",
+    "{kind}인 {dong}에서는 배관 노후로 인한 문의가 특히 많습니다. 스피드 배관공사는 {area} 현장 특성을 감안해 손상을 최소화하는 방식으로 시공합니다.",
+    "{area}에서 접수되는 문의는 주거·상가 환경이 섞여 있는 {kind} 특성을 반영합니다. 원인을 먼저 진단하고, 확정 견적에 동의하신 뒤에만 작업합니다.",
+]
+
+# 증상 안내 문장 풀(2개 선택)
+SYMPTOMS = [
+    "천장이나 벽의 얼룩, 원인 모를 수도요금 증가는 숨은 누수의 신호일 수 있습니다.",
+    "물이 잘 내려가지 않거나 역류·악취가 있다면 배관 막힘을 의심해야 합니다.",
+    "바닥이 자주 축축하거나 곰팡이가 반복된다면 배관 누수를 점검할 시점입니다.",
+    "쓰지 않을 때도 수도 계량기가 돌아간다면 어딘가 물이 새고 있을 수 있습니다.",
+    "변기·싱크대·세면대가 자주 막힌다면 관 내부 이물질이나 구조 문제일 수 있습니다.",
+    "보일러 압력이 자꾸 떨어진다면 난방·급탕 배관의 누수를 확인해야 합니다.",
+]
+
+# 처리 방식 문장 풀(2개 선택)
+METHODS = [
+    "청음식·가스식 누수탐지 장비로 벽·바닥을 뜯지 않고 새는 지점을 찾습니다.",
+    "관로 내시경으로 막힘 원인을 눈으로 확인한 뒤 고압세척으로 뿌리째 제거합니다.",
+    "스프링·고압세척 등 상황에 맞는 방식으로 재발 없이 뚫어냅니다.",
+    "정품 부속으로 교체하고 시공 후 마감과 재발 여부까지 점검합니다.",
+    "급수·배수 배관은 구간별로 점검해 손상 부위만 최소로 교체합니다.",
+]
+
+# 비용 안내 문장 풀
+COSTS = [
+    "{area}의 출동 비용과 시공 가격은 증상·자재·난이도에 따라 달라집니다. 전화로 증상을 알려주시면 예상 비용을 먼저 안내하고, 방문 진단 후 확정 견적을 드립니다.",
+    "{dong} 시공 비용은 현장 상황에 따라 다르므로 방문 진단 후 확정 견적으로 안내합니다. 동의 없이 추가 비용이 붙지 않습니다.",
+    "가격은 언제나 시공 전에 먼저 확인해 드립니다. {area} 어디든 증상과 위치를 말씀해 주시면 예상 범위를 안내한 뒤 진행합니다.",
+    "{area} 내 작업은 자재·난이도에 따라 비용이 달라집니다. 진단 결과와 확정 견적을 문서로 안내해 예상치 못한 비용을 방지합니다.",
+]
+
+# 제목 패턴 풀
+DONG_TITLES = [
+    "{disp} {dong} 배관공사·누수·하수구막힘 | {brand}",
+    "{disp} {dong} 하수구막힘·누수탐지 24시간 출동 | {brand}",
+    "{dong} 배관·누수·막힘 시공 - {disp} {brand}",
+    "{disp} {dong} 변기·싱크대 막힘·누수공사 | {brand}",
+    "{dong} 누수탐지·고압세척·설비교체 | {disp} {brand}",
+]
+
+# ─────────────────────────────────────────────
 # 공통 head
 # ─────────────────────────────────────────────
 def head(title, desc, canonical, og_img="assets/img/og-main.svg", extra_ld=""):
@@ -840,10 +929,12 @@ def build_units():
             ld += ld_local(area, url, f"{area} 배관·누수·하수구 전문 시공")
             parts = [head(title, desc, url, extra_ld=ld)]
             parts.append(header(depth))
+            ukey = (slug, city, gu or "", "unit")
+            u_intro = pick(DONG_INTRO, *ukey).format(area=esc(area), dong=esc(disp))
             parts.append(f'''<section class="subhero"><div class="wrap">
   <div class="crumb">{crumb(depth, bc)}</div>
   <h1>{esc(area)} 배관공사·누수탐지·하수구막힘</h1>
-  <p>{esc(area)} 전역에서 누수탐지·누수공사, 하수구·변기·싱크대 막힘, 수전·변기 교체, 고압세척까지 24시간 신속 출동합니다. {esc(disp)} 내 우리 동네를 선택하면 동별 안내를 확인할 수 있습니다.</p>
+  <p>{u_intro} {esc(disp)} 내 우리 동네를 선택하면 동별 안내를 확인할 수 있습니다.</p>
 </div></section>''')
 
             dong_links = "".join(
@@ -862,13 +953,15 @@ def build_units():
                       f'<li>{ICONS["pin"]}<a href="{path_prefix(depth)}{region_url(slug)}">{esc(full)} 전체</a></li>')
             else:
                 up = f'<li>{ICONS["pin"]}<a href="{path_prefix(depth)}{region_url(slug)}">{esc(full)} 전체 보기</a></li>'
+            u_meth = " ".join(picks(METHODS, 2, *ukey, "m"))
+            u_cost = pick(COSTS, *ukey, "c").format(area=esc(area), dong=esc(disp))
             parts.append(f'''<section class="block mist"><div class="wrap two-col">
   <div class="prose">
     <h2>{esc(disp)}에서 이용 가능한 서비스</h2>
-    <p>{esc(area)}의 오래된 주택부터 신축 아파트, 상가·사무실까지 현장 특성에 맞춰 시공합니다. 누수·막힘·교체·설비 어떤 상황이든 원인을 정확히 진단하고 재발 없이 처리합니다.</p>
+    <p>{esc(area)}의 오래된 주택부터 신축 아파트, 상가·사무실까지 현장 특성에 맞춰 시공합니다. {u_meth}</p>
     <div class="svc-cats" style="grid-template-columns:1fr 1fr;margin-top:14px">{service_cards(depth)}</div>
     <h3>{esc(disp)} 비용·가격 안내</h3>
-    <p>{esc(area)} 내 출동 비용과 시공 가격은 증상·자재·난이도에 따라 달라집니다. 전화로 증상을 알려주시면 예상 비용을 먼저 안내하고, 방문 진단 후 확정 견적을 드립니다. 동의 없이 추가 비용은 발생하지 않습니다.</p>
+    <p>{u_cost} 동의 없이 추가 비용은 발생하지 않습니다.</p>
   </div>
   {side_card(depth, area)}
     <h3 style="margin-top:20px;font-size:15px">상위 지역</h3>
@@ -904,10 +997,13 @@ def build_dongs():
                 member_str = "·".join(members)
                 url = dong_url(slug, city, gu, dong)
                 area = f"{full} {disp} {dong}"
+                key = (slug, city, gu or "", dong)          # 지역별 변주 키
+                kind = area_kind(dong)
                 cover_note = (f" ({member_str} 포함)" if covers else "")
-                title = f"{disp} {dong} 배관공사·누수·하수구막힘 | {SITE['brand']}"
-                desc = (f"{full} {disp} {dong}{cover_note} 배관·누수·하수구 전문. 누수탐지, 하수구막힘, "
-                        f"싱크대·세면대·변기 막힘, 수전/변기 교체, 고압세척까지 24시간 출동. 출동 전 비용 안내.")
+                title = pick(DONG_TITLES, *key).format(disp=disp, dong=dong, brand=SITE["brand"])
+                sym0 = pick(SYMPTOMS, *key, "d")
+                desc = (f"{full} {disp} {dong}{cover_note} 배관·누수·하수구 전문. {sym0} "
+                        f"누수탐지·하수구막힘·변기/수전 교체·고압세척까지 24시간 출동, 출동 전 비용 안내.")
                 bc = [("홈","index.html"),(full,region_url(slug))]
                 if gu:
                     bc.append((city, city_url(slug, city)))
@@ -920,10 +1016,11 @@ def build_dongs():
                 ld += ld_local(area, url, f"{area} 배관·누수·하수구 전문 시공")
                 parts = [head(title, desc, url, extra_ld=ld)]
                 parts.append(header(depth))
+                intro = pick(DONG_INTRO, *key).format(area=esc(area), dong=esc(dong))
                 parts.append(f'''<section class="subhero"><div class="wrap">
   <div class="crumb">{crumb(depth, bc)}</div>
   <h1>{esc(disp)} {esc(dong)} 배관공사·누수탐지·하수구막힘</h1>
-  <p>{esc(area)}에서 누수가 의심되거나 하수구·변기·싱크대가 막혔다면 스피드 배관공사로 연락하세요. {esc(dong)} 인근에 신속하게 출동해 원인을 정확히 진단하고 재발 없이 시공합니다. 출동 전 예상 비용을 먼저 안내합니다.</p>
+  <p>{intro} 출동 전 예상 비용을 먼저 안내합니다.</p>
 </div></section>''')
 
                 cover_block = ""
@@ -949,16 +1046,34 @@ def build_dongs():
                     up += f'<li>{ICONS["pin"]}<a href="{path_prefix(depth)}{city_url(slug, city)}">{esc(city)} 전체</a></li>'
                 up += f'<li>{ICONS["pin"]}<a href="{path_prefix(depth)}{region_url(slug)}">{esc(full)} 전체</a></li>'
 
+                # 지역별 변주 문단
+                open_p = pick(DONG_OPEN, *key).format(area=esc(area), disp=esc(disp), dong=esc(dong), kind=esc(kind))
+                syms = " ".join(picks(SYMPTOMS, 2, *key, "s"))
+                meths = " ".join(picks(METHODS, 2, *key, "m"))
+                cost_p = pick(COSTS, *key, "c").format(area=esc(area), dong=esc(dong))
+
+                # 지역 고유 사실 정보(페이지마다 실제로 다른 데이터)
+                chain = " › ".join([full] + ([city] if gu else []) + [disp if not gu else gu])
+                fact_rows = [("상위 행정구역", esc(chain))]
+                if covers:
+                    fact_rows.append(("포함 세부 행정동", esc(member_str)))
+                fact_rows.append((f"{esc(disp)} 행정동 수", f"{gcount}개"))
+                if near:
+                    fact_rows.append(("인접 행정동", esc('·'.join(near))))
+                fact_tbl = "".join(f'<tr><th>{k}</th><td>{v}</td></tr>' for k, v in fact_rows)
+
                 parts.append(f'''<section class="block"><div class="wrap two-col">
   <div class="prose">
     <h2>{esc(dong)} 배관 문제, 스피드 배관공사가 해결합니다</h2>
-    <p>{esc(area)}는 {esc(disp)}에 속한 지역으로, 오래된 주택과 아파트·상가가 함께 있어 배관 노후로 인한 누수·막힘 문의가 꾸준합니다. 천장이나 벽의 얼룩, 원인 모를 수도요금 증가는 누수 신호일 수 있고, 물이 잘 안 내려가거나 역류한다면 배관 막힘일 수 있습니다.</p>
+    <p>{open_p} {syms}</p>
     {cover_block}
-    <p>{esc(dong)}에서 이런 증상이 있다면 방치하지 말고 상담하세요. 청음식·가스식 누수탐지 장비와 관로 내시경으로 정확히 진단한 뒤, 필요한 시공만 확정 견적으로 안내하고 진행합니다.</p>
+    <p>{esc(dong)}에서 이런 증상이 있다면 방치하지 말고 상담하세요. {meths}</p>
+    <h3>{esc(dong)} 행정 정보</h3>
+    <table class="cost-table"><tbody>{fact_tbl}</tbody></table>
     <h3>{esc(dong)}에서 이용 가능한 서비스</h3>
     <div class="svc-cats" style="grid-template-columns:1fr 1fr;margin-top:14px">{service_cards(depth)}</div>
     <h3>{esc(dong)} 비용·가격 안내</h3>
-    <p>{esc(area)} 출동 비용과 시공 가격은 증상·자재·난이도에 따라 달라집니다. 전화로 증상을 알려주시면 예상 비용을 먼저 안내하고, 방문 진단 후 확정 견적을 드립니다. 동의 없이 추가 비용은 발생하지 않습니다.</p>
+    <p>{cost_p} 동의 없이 추가 비용은 발생하지 않습니다.</p>
     <h3>{esc(disp)} 인근 동네</h3>
     <div class="region-grid">{near_links}</div>
   </div>
