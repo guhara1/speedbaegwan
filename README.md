@@ -93,6 +93,8 @@ python3 build.py
 - **구조화 데이터(JSON-LD)**: 전 페이지에 `Plumber`/`LocalBusiness`(+`AggregateRating` 별점 집계), 서비스 페이지에 `Service`, 지역·시군구·행정동 페이지에 해당 지역별 `LocalBusiness`, 모든 지역·서비스 페이지에 `BreadcrumbList`, 메인·모든 지역 페이지에 `FAQPage`, 메인에 `Review`(개별 후기) 적용. ※ 별점/후기 스키마는 실제 후기로 교체 후 사용(위 경고 참고).
 - **내부 링크 강화 + 롱테일**: 광역 → 행정시 → 행정구 → 행정동 계층 링크에 더해, ①메인에 주요 도시 동별 **딥링크 허브**, ②모든 지역·동 페이지에 "**{지역}+{서비스 키워드}**" 롱테일 앵커 블록(예: `강남구 대치동 하수구막힘`)과 인접 지역 링크, ③지역별 `FAQPage` Q&A로 롱테일 질의를 커버.
 - **고객 후기(별점)**: 메인·모든 지역 페이지에 별점 후기 섹션(★ + 평점 집계) 노출. 페이지마다 서로 다른 후기 2~3개를 결정적으로 선택해 중복을 피함.
+- **정보성 롱테일 콘텐츠(`/guides/`)**: 변기·싱크대·하수구 막힘 뚫는 법, 누수 자가진단, 겨울 동파 예방 등 **실제로 도움이 되는 고유 가이드 글** 6편. 각 글에 `Article`·`FAQPage`·`BreadcrumbList` 스키마와 서비스/다른 글 내부링크. 정보성 검색어 유입·백링크·토픽 권위에 유리(대량 지역 페이지의 도어웨이 리스크를 보완하는 진짜 콘텐츠).
+- **성능(Core Web Vitals)**: Pretendard 폰트를 **셀프호스팅**(`assets/fonts/`)하고 렌더 블로킹 `@import`를 제거, `font-display:swap`+`preload` 적용. 외부 요청 0건으로 초기 렌더가 빨라짐. favicon·`404.html`(noindex)·sitemap `<lastmod>`·`WebSite`/`Organization` 스키마 추가.
 - **페이지 경험**: 반응형(모바일 최적화), 시맨틱 HTML, 이미지 lazy-load, 접근성(포커스·모션 감소) 반영. HTTPS는 호스팅에서 적용하세요.
 - **선호 썸네일**: `og:image` 메타 지정 완료(추가로 schema.org `image`도 병행 가능).
 - **사이트맵**: `sitemap.xml`(사이트맵 색인) + `sitemap-core.xml` + 시·도별 `sitemap-<slug>.xml` 17개 생성 완료 → Google Search Console에 `sitemap.xml`을 제출하세요.

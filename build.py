@@ -362,9 +362,8 @@ def head(title, desc, canonical, og_img="assets/img/og-main.svg", extra_ld=""):
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0A1A2F">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230EA5B7'/%3E%3Cpath d='M12 4s5 5.5 5 9a5 5 0 0 1-10 0c0-3.5 5-9 5-9z' fill='white'/%3E%3C/svg%3E">
+<link rel="preload" href="{{FONT}}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{{CSS}}">
 {extra_ld}
 </head>
@@ -398,6 +397,7 @@ def header(depth=0):
     <li class="has-drop"><a href="{p}regions/seoul.html">지역별 시공</a>
       <div class="drop regions"><span class="drop-head">전국 서비스 지역</span>{reg_links}</div>
     </li>
+    <li><a href="{p}guides/index.html">생활정보</a></li>
     <li><a href="{p}index.html#gallery">시공사례</a></li>
     <li><a href="{p}index.html#cost">비용안내</a></li>
     <li><a href="{p}index.html#about">회사소개</a></li>
@@ -433,9 +433,9 @@ def footer(depth=0):
     <div><h4>전문 서비스</h4><ul>{svc_links}</ul></div>
     <div><h4>주요 서비스 지역</h4><ul>{reg_links}</ul></div>
     <div><h4>바로가기</h4><ul>
+      <li><a href="{p}guides/index.html">배관 생활정보</a></li>
       <li><a href="{p}index.html#gallery">시공사례</a></li>
       <li><a href="{p}index.html#cost">비용안내</a></li>
-      <li><a href="{p}index.html#about">회사소개</a></li>
       <li><a href="{p}index.html#faq">자주묻는질문</a></li>
       <li><a href="tel:{SITE["phone_tel"]}">긴급 상담 전화</a></li>
     </ul></div>
@@ -454,7 +454,10 @@ def footer(depth=0):
 </body></html>'''
 
 def render(depth, body_parts):
-    return "".join(body_parts).replace("{CSS}", path_prefix(depth) + "assets/css/style.css")
+    p = path_prefix(depth)
+    return ("".join(body_parts)
+            .replace("{CSS}", p + "assets/css/style.css")
+            .replace("{FONT}", p + "assets/fonts/PretendardVariable.woff2"))
 
 # ─────────────────────────────────────────────
 # JSON-LD
@@ -846,6 +849,19 @@ def build_index():
 
     # 고객 후기 (별점) — 메인은 9개 노출
     parts.append(reviews_block(0, "home", heading="고객이 남긴 별점 후기", n=9))
+
+    # 생활정보(정보성 롱테일) 링크
+    gcards = "".join(
+        f'<a class="guide-card" href="guides/{g["slug"]}.html"><span class="g-cat">{esc(g["cat"])}</span>'
+        f'<h3>{esc(g["title"])}</h3><p>{esc(g["desc"])}</p>'
+        f'<span class="g-more">자세히 보기 {ICONS["arrow"]}</span></a>' for g in GUIDES[:6])
+    parts.append(f'''<section class="block" id="guides"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">배관 생활정보</span>
+    <h2>집에서 먼저 해보는 셀프 가이드</h2>
+    <p>변기·하수구 막힘 뚫는 법, 누수 자가진단, 겨울 동파 예방까지. 급할 때 도움이 되는 정보를 모았습니다.</p></div>
+  <div class="guide-grid">{gcards}</div>
+  <div style="text-align:center;margin-top:22px"><a class="btn btn-ghost" href="guides/index.html">생활정보 전체 보기 {ICONS["arrow"]}</a></div>
+</div></section>''')
 
     # 갤러리
     figs = "".join(f'<figure><img src="assets/img/{slug}.svg" alt="{esc(label)} 시공 사례" loading="lazy" width="800" height="600"><figcaption>{esc(label)}</figcaption></figure>' for label,slug in GALLERY)
@@ -1323,6 +1339,249 @@ def build_dongs():
     print(f"  regions/*/*/  {n}개 (대표 행정동)")
 
 # ─────────────────────────────────────────────
+# 생활정보(정보성 롱테일 가이드) — 실제로 도움이 되는 고유 콘텐츠
+#  slug, title, cat, service(연결 서비스), date(발행), desc, lead, html(본문), faq
+# ─────────────────────────────────────────────
+GUIDES = [
+    {
+        "slug": "byeongi-makhim-tulnun-beop", "cat": "막힘", "service": "makhim", "date": "2026-06-02",
+        "title": "변기 막힘, 집에서 뚫는 법과 절대 하면 안 되는 것",
+        "desc": "변기가 막혔을 때 집에서 안전하게 뚫는 순서와, 오히려 상황을 악화시키는 금지 행동을 정리했습니다.",
+        "lead": "변기가 막히면 당황해서 물을 계속 내리기 쉬운데, 그러면 넘칩니다. 순서대로 침착하게 시도하면 대부분 집에서 해결됩니다.",
+        "html": """
+<h2>먼저, 물을 더 내리지 마세요</h2>
+<p>변기 물이 평소보다 천천히 내려가거나 차오른다면 <b>추가로 물을 내리지 마세요.</b> 변기 뒤 탱크 뚜껑을 열어 물마개(플로트)를 손으로 올리면 물이 더 차는 것을 막을 수 있습니다. 바닥에 신문지·수건을 깔아 넘침에 대비합니다.</p>
+<h2>집에서 시도하는 순서</h2>
+<ol>
+  <li><b>주방세제 + 따뜻한 물</b>: 세제 한 컵을 넣고 <b>따뜻한 물</b>(끓는 물 금지)을 부어 10~20분 두면 기름·유기물이 부드러워집니다.</li>
+  <li><b>압축기(플런저·뚫어뻥)</b>: 배수구에 밀착시켜 상하로 힘 있게 여러 번 펌프질합니다. 물이 어느 정도 잠겨 있어야 압력이 걸립니다.</li>
+  <li><b>페트병 압력법</b>: 압축기가 없을 때, 입구를 막고 눌러 순간 압력을 주는 임시 방법입니다.</li>
+  <li><b>관선(스프링)</b>: 위 방법으로도 안 되면 이물질이나 구조적 막힘일 수 있습니다.</li>
+</ol>
+<h2>절대 하면 안 되는 것</h2>
+<ul>
+  <li><b>끓는 물 붓기</b> — 도기에 균열이 생겨 변기를 통째로 교체해야 할 수 있습니다.</li>
+  <li><b>물 계속 내리기</b> — 순식간에 넘쳐 바닥·아랫집 피해로 이어집니다.</li>
+  <li><b>철사·옷걸이로 무리하게 쑤시기</b> — 도기 내부가 긁히거나 깨질 수 있습니다.</li>
+  <li><b>물티슈·기저귀·음식물 흘려보내기</b> — 물에 풀리지 않아 막힘의 가장 흔한 원인입니다.</li>
+</ul>
+""",
+        "faq": [
+            ("뚫어뻥으로도 안 뚫려요. 어떻게 하나요?", "장난감·수건 같은 고형물이 걸렸거나 배관 깊은 곳이 막힌 경우입니다. 무리하면 도기가 파손될 수 있으니 관선·내시경 장비로 원인을 확인해 제거하는 편이 안전합니다."),
+            ("물티슈는 변기에 버려도 되나요?", "'물에 녹는다'고 표기된 제품도 실제로는 잘 풀리지 않아 막힘의 주원인이 됩니다. 변기에는 화장지 외에 아무것도 버리지 않는 것이 좋습니다."),
+        ],
+    },
+    {
+        "slug": "hasugu-naemsae-wonin", "cat": "막힘", "service": "seolbi", "date": "2026-05-20",
+        "title": "하수구에서 냄새가 올라올 때 — 원인 5가지와 해결법",
+        "desc": "화장실·싱크대 하수구 냄새의 원인 5가지와 집에서 할 수 있는 해결법, 전문가가 필요한 경우를 정리했습니다.",
+        "lead": "하수구 냄새는 대부분 '봉수(물막이)'가 마르거나 배관에 찌꺼기가 쌓여 생깁니다. 원인을 알면 해결이 쉽습니다.",
+        "html": """
+<h2>냄새의 흔한 원인 5가지</h2>
+<ol>
+  <li><b>봉수(트랩의 물) 증발</b> — 오래 안 쓴 배수구는 냄새를 막아주던 물이 말라 하수 냄새가 올라옵니다.</li>
+  <li><b>트랩 없음·파손</b> — 배수구에 트랩이 없거나 깨졌으면 냄새가 그대로 역류합니다.</li>
+  <li><b>기름·머리카락 찌꺼기 부패</b> — 배관 벽에 눌어붙은 슬러지가 부패해 악취를 냅니다.</li>
+  <li><b>배관 균열·연결 불량</b> — 이음새 틈으로 냄새가 샙니다.</li>
+  <li><b>통기(공기) 문제</b> — 물 내릴 때 '꼬르륵' 소리가 나면 통기관 쪽을 의심합니다.</li>
+</ol>
+<h2>집에서 할 수 있는 해결</h2>
+<ul>
+  <li>안 쓰는 배수구에도 <b>가끔 물을 흘려 봉수를 유지</b>합니다.</li>
+  <li>배수구 <b>트랩·거름망</b>을 설치하고 주기적으로 청소합니다.</li>
+  <li><b>베이킹소다 + 식초</b>를 붓고 30분 뒤 따뜻한 물로 헹구면 가벼운 찌꺼기·냄새가 줄어듭니다.</li>
+  <li>세면대·변기 <b>바닥 실리콘</b>이 벌어졌으면 다시 마감합니다.</li>
+</ul>
+""",
+        "faq": [
+            ("청소해도 냄새가 계속 나요.", "배관 안쪽에 오래 쌓인 슬러지나 균열이 원인일 수 있습니다. 고압세척으로 관 내부를 씻어내거나 내시경으로 상태를 확인하면 근본 원인을 잡을 수 있습니다."),
+            ("여러 곳에서 동시에 냄새가 나요.", "공용 배관(횡주관) 쪽 문제일 가능성이 큽니다. 개별 청소로는 한계가 있어 전문 점검을 권합니다."),
+        ],
+    },
+    {
+        "slug": "sudoyogeum-nusu-jindan", "cat": "누수", "service": "nusu", "date": "2026-05-06",
+        "title": "수도요금이 갑자기 많이 나올 때 — 누수 자가진단 체크리스트",
+        "desc": "수도요금이 평소의 2배 이상 나왔다면 누수를 의심해야 합니다. 집에서 할 수 있는 누수 자가진단 방법을 정리했습니다.",
+        "lead": "쓰지도 않았는데 요금이 급증했다면 어딘가 물이 새고 있을 가능성이 높습니다. 아래 순서로 확인해 보세요.",
+        "html": """
+<h2>1분 계량기 테스트</h2>
+<p>집 안 모든 수도·세탁기·보일러를 잠근 뒤 <b>수도 계량기</b>를 보세요. 은색 <b>별 모양(팽이) 표시가 계속 돌아가면</b> 어딘가에서 물이 새고 있다는 신호입니다.</p>
+<h2>새는 곳 좁히기</h2>
+<ul>
+  <li><b>변기</b>: 물탱크에 식용색소를 몇 방울 넣고 20분 뒤 변기 물이 색으로 물들면 부속 누수(가장 흔함)입니다.</li>
+  <li><b>보일러</b>: 사용하지 않는데 압력이 자꾸 떨어지면 난방·급탕 배관 누수를 의심합니다.</li>
+  <li><b>벽·천장</b>: 얼룩·곰팡이·물방울이 반복되면 매립 배관 누수 가능성이 있습니다.</li>
+  <li><b>온수만 요금 급증</b>: 온수 배관 쪽 누수일 수 있습니다.</li>
+</ul>
+<h2>집에서 vs 전문가</h2>
+<p>변기 부속·수전 패킹처럼 눈에 보이는 곳은 부품 교체로 해결되기도 합니다. 하지만 <b>벽·바닥 속</b> 누수는 청음식·가스식 <b>누수탐지</b> 장비로 지점을 찾아야 벽을 뜯지 않고 최소 시공으로 잡을 수 있습니다.</p>
+""",
+        "faq": [
+            ("계량기 별이 아주 천천히 돌아요.", "미세 누수일 수 있습니다. 방치하면 요금이 계속 새고 곰팡이·구조 손상으로 이어지니 조기에 탐지받는 것이 좋습니다."),
+            ("벽을 꼭 뜯어야 하나요?", "아닙니다. 비파괴 누수탐지로 지점을 먼저 특정하면 해당 부위만 최소로 열어 시공할 수 있습니다."),
+        ],
+    },
+    {
+        "slug": "gyeoul-baegwan-dongpa-yebang", "cat": "설비", "service": "seolbi", "date": "2026-01-08",
+        "title": "겨울철 배관 동파 예방법과 얼었을 때 안전하게 녹이는 법",
+        "desc": "한파에 수도·계량기가 얼지 않도록 예방하는 법과, 이미 얼었을 때 안전하게 녹이는 방법을 정리했습니다.",
+        "lead": "배관 동파는 예방이 최선입니다. 한 번 터지면 누수·수리 비용이 크게 늘어나니 미리 대비하세요.",
+        "html": """
+<h2>동파 예방 체크리스트</h2>
+<ul>
+  <li><b>노출 배관·계량기함 보온</b>: 보온재나 헌 옷·수건으로 감싸고 계량기함은 비닐로 찬바람을 막습니다.</li>
+  <li><b>한파·장기 외출 시 물 조금 틀어두기</b>: 수돗물을 <b>가늘게</b> 흘려두면 얼음이 잘 얼지 않습니다.</li>
+  <li><b>실내 온도 유지</b>: 외출 시에도 난방을 완전히 끄지 말고 최소 온도를 유지합니다.</li>
+  <li><b>보일러 동파 방지 모드</b> 사용, 외출 모드로 순환시킵니다.</li>
+</ul>
+<h2>얼었을 때 — 안전하게 녹이기</h2>
+<ol>
+  <li>따뜻한 물수건을 감싸거나 <b>헤어드라이어</b>로 <b>천천히</b> 녹입니다.</li>
+  <li>계량기·노출관은 <b>미지근한 물</b>을 부어가며 녹입니다(끓는 물 금지 — 급격한 온도차로 파열).</li>
+  <li><b>토치·열풍기 과열은 금지</b>입니다. 배관 파열·화재 위험이 있습니다.</li>
+</ol>
+""",
+        "faq": [
+            ("녹였더니 물이 새요.", "얼면서 배관이 이미 갈라졌을 수 있습니다. 노출관은 부속 교체, 매립관은 누수탐지 후 해당 부위만 시공합니다."),
+            ("계량기가 터졌어요.", "계량기 동파는 관리사무소·상수도사업소 또는 전문 업체에 연락해 교체·복구해야 합니다."),
+        ],
+    },
+    {
+        "slug": "singkeudae-makhim-tulnun-beop", "cat": "막힘", "service": "makhim", "date": "2026-04-10",
+        "title": "싱크대 하수구 막힘 — 원인별로 뚫는 법",
+        "desc": "싱크대 물이 안 내려갈 때 원인별 해결법과, 재발을 막는 관리 습관을 정리했습니다.",
+        "lead": "싱크대 막힘은 대부분 기름과 음식물 찌꺼기가 뭉친 슬러지 때문입니다. 원인을 알면 손쉽게 뚫을 수 있습니다.",
+        "html": """
+<h2>집에서 시도하는 방법</h2>
+<ol>
+  <li><b>따뜻한 물 + 주방세제</b>로 굳은 기름을 녹입니다.</li>
+  <li><b>베이킹소다 한 컵 + 식초 한 컵</b>을 붓고 거품이 끝나면 따뜻한 물로 헹굽니다.</li>
+  <li><b>압축기</b>로 배수구를 밀착해 펌프질합니다.</li>
+  <li>싱크대 아래 <b>S자 트랩</b>을 분리해 안쪽 찌꺼기를 직접 제거합니다(아래 양동이 받치기).</li>
+</ol>
+<h2>재발을 막는 습관</h2>
+<ul>
+  <li>기름은 하수구에 붓지 말고 굳혀서 버립니다.</li>
+  <li>배수구 <b>거름망</b>으로 음식물을 걸러냅니다.</li>
+  <li>주기적으로 따뜻한 물을 흘려 기름이 굳지 않게 합니다.</li>
+</ul>
+""",
+        "faq": [
+            ("트랩까지 청소했는데 안 내려가요.", "벽 속 배관이나 공용관까지 막힌 경우입니다. 고압세척으로 관 내부를 씻어내면 재발 없이 뚫립니다."),
+            ("뜨거운 물을 부어도 되나요?", "따뜻한 물은 괜찮지만 끓는 물은 배관 종류에 따라 변형을 줄 수 있어 권하지 않습니다."),
+        ],
+    },
+    {
+        "slug": "semyeondae-baesugu-makhim", "cat": "막힘", "service": "makhim", "date": "2026-03-18",
+        "title": "세면대·욕실 배수구 막힘 셀프 해결법",
+        "desc": "머리카락·비누때로 막힌 세면대와 욕실 배수구를 집에서 뚫는 방법과 예방법입니다.",
+        "lead": "세면대·욕실 배수구 막힘의 주범은 머리카락과 비누때 뭉치입니다. 도구 하나면 대부분 해결됩니다.",
+        "html": """
+<h2>집에서 뚫는 방법</h2>
+<ol>
+  <li><b>머리카락 제거 도구</b>(길고 톱니 있는 플라스틱)를 넣어 뭉친 머리카락을 끌어올립니다.</li>
+  <li>세면대 <b>팝업(마개)</b>을 분리해 걸린 이물질을 청소합니다.</li>
+  <li><b>베이킹소다 + 식초</b> 후 따뜻한 물로 헹궈 비누때를 녹입니다.</li>
+  <li><b>소형 압축기</b>로 배수구를 밀착해 펌프질합니다.</li>
+</ol>
+<h2>예방</h2>
+<ul>
+  <li>배수구에 <b>헤어 캐처</b>를 놓아 머리카락을 걸러냅니다.</li>
+  <li>월 1회 정도 베이킹소다·식초로 관리합니다.</li>
+</ul>
+""",
+        "faq": [
+            ("자꾸 반복해서 막혀요.", "배관 안쪽에 비누때가 두껍게 쌓였거나 구배(기울기) 문제일 수 있습니다. 반복된다면 배관 점검을 권합니다."),
+            ("역류까지 생겨요.", "아래쪽 공용 배관 문제일 수 있어, 개별 청소보다 전문 점검이 필요합니다."),
+        ],
+    },
+]
+
+def build_guides():
+    p1 = path_prefix(1)
+    # 목록 페이지
+    url = "guides/index.html"
+    title = f"배관 생활정보 · 셀프 가이드 | {SITE['brand']}"
+    desc = "변기·싱크대·하수구 막힘 뚫는 법, 누수 자가진단, 겨울 동파 예방 등 집에서 바로 쓰는 배관 생활정보 모음."
+    ld = ld_breadcrumb([("홈", "index.html"), ("생활정보", url)])
+    cards = ""
+    for g in GUIDES:
+        cards += (f'<a class="guide-card" href="{q(g["slug"])}.html">'
+                  f'<span class="g-cat">{esc(g["cat"])}</span>'
+                  f'<h3>{esc(g["title"])}</h3><p>{esc(g["desc"])}</p>'
+                  f'<span class="g-more">자세히 보기 {ICONS["arrow"]}</span></a>')
+    parts = [head(title, desc, url, extra_ld=ld)]
+    parts.append(header(1))
+    parts.append(f'''<section class="subhero"><div class="wrap">
+  <div class="crumb">{crumb(1, [("홈","index.html"),("생활정보",None)])}</div>
+  <h1>배관 생활정보</h1>
+  <p>변기·하수구 막힘, 누수 자가진단, 동파 예방까지. 집에서 바로 시도할 수 있는 방법을 정리했습니다. 스스로 해결이 어려우면 <a href="tel:{SITE["phone_tel"]}">{esc(SITE["emergency"])}</a>로 문의하세요.</p>
+</div></section>
+<section class="block"><div class="wrap"><div class="guide-grid">{cards}</div></div></section>''')
+    parts.append(footer(1))
+    with open(os.path.join(_ensure_dir("guides"), "index.html"), "w", encoding="utf-8") as f:
+        f.write(render(1, parts))
+
+    # 개별 글
+    for i, g in enumerate(GUIDES):
+        gurl = f"guides/{g['slug']}.html"
+        svc = next(s for s in SERVICES if s["slug"] == g["service"])
+        gtitle = f"{g['title']} | {SITE['brand']}"
+        art_ld = (f'<script type="application/ld+json">{{"@context":"https://schema.org","@type":"Article",'
+                  f'"headline":{json.dumps(g["title"], ensure_ascii=False)},'
+                  f'"description":{json.dumps(g["desc"], ensure_ascii=False)},'
+                  f'"inLanguage":"ko-KR","datePublished":"{g["date"]}","dateModified":"{BUILD_DATE}",'
+                  f'"author":{{"@type":"Organization","name":{json.dumps(SITE["brand"], ensure_ascii=False)}}},'
+                  f'"publisher":{{"@type":"Organization","name":{json.dumps(SITE["brand"], ensure_ascii=False)},'
+                  f'"logo":{{"@type":"ImageObject","url":"{SITE["domain"]}/assets/img/og-main.svg"}}}},'
+                  f'"mainEntityOfPage":"{SITE["domain"]}/{gurl}"}}</script>')
+        ld = (ld_breadcrumb([("홈", "index.html"), ("생활정보", "guides/index.html"), (g["title"], gurl)])
+              + art_ld + ld_faq(g["faq"]))
+        faq_fq = "".join(f'<details><summary>{esc(qq)}</summary><p>{esc(aa)}</p></details>' for qq, aa in g["faq"])
+        # 관련 글(다른 가이드) 링크
+        rel = [x for x in GUIDES if x["slug"] != g["slug"]][:3]
+        rel_links = "".join(f'<li>{ICONS["doc"]}<a href="{q(x["slug"])}.html">{esc(x["title"])}</a></li>' for x in rel)
+        parts = [head(gtitle, g["desc"], gurl, extra_ld=ld)]
+        parts.append(header(1))
+        parts.append(f'''<section class="subhero"><div class="wrap">
+  <div class="crumb">{crumb(1, [("홈","index.html"),("생활정보","guides/index.html"),(g["cat"],None)])}</div>
+  <h1>{esc(g["title"])}</h1>
+  <p>{esc(g["lead"])}</p>
+  <div class="g-meta">{ICONS["clock"]} 최종 업데이트 {esc(BUILD_DATE)} · {esc(SITE["brand"])}</div>
+</div></section>''')
+        parts.append(f'''<section class="block"><div class="wrap two-col">
+  <article class="prose article">{g["html"]}
+    <h2>이럴 땐 전문가에게 맡기세요</h2>
+    <p>위 방법으로 해결되지 않거나 반복해서 문제가 생긴다면 배관 안쪽·공용관 문제일 수 있습니다. {esc(SITE["brand"])}는 <a href="{p1}services/{svc["slug"]}.html">{esc(svc["name"])}</a>를 포함해 누수·막힘·설비 전반을 {esc(SITE["emergency"])}로 처리합니다. 무리한 자가 시공으로 배관·기물이 손상되기 전에 상담하세요.</p>
+    <h2>자주 묻는 질문</h2>
+    <div class="faq">{faq_fq}</div>
+    <h3>관련 생활정보</h3>
+    <ul class="rel-list">{rel_links}</ul>
+  </article>
+  <aside class="side-card">
+    <h3>{esc(svc["short"])} 상담 · {esc(SITE["reserve"])}</h3>
+    <div class="num">{esc(SITE["phone_display"])}</div>
+    <a class="btn btn-primary" href="tel:{SITE["phone_tel"]}">{ICONS["phone"]} 전화 상담</a>
+    <ul>
+      <li>{ICONS["check"]} {esc(SITE["emergency"])}·연중무휴</li>
+      <li>{ICONS["check"]} 출동 전 비용 사전고지</li>
+      <li>{ICONS["check"]} 정품 자재·경력 기술자</li>
+    </ul>
+    <h3 style="margin-top:20px;font-size:15px">전문 서비스</h3>
+    <ul>{"".join(f'<li>{ICONS["pin"]}<a href="{p1}services/{s2["slug"]}.html">{esc(s2["name"])}</a></li>' for s2 in SERVICES)}</ul>
+  </aside>
+</div></section>''')
+        parts.append(footer(1))
+        with open(os.path.join(_ensure_dir("guides"), f'{g["slug"]}.html'), "w", encoding="utf-8") as f:
+            f.write(render(1, parts))
+    print(f"  guides/ {len(GUIDES)+1}개 (생활정보)")
+
+def _ensure_dir(*parts):
+    d = os.path.join(ROOT, *parts)
+    os.makedirs(d, exist_ok=True)
+    return d
+
+# ─────────────────────────────────────────────
 # 사이트맵 (색인 + core + 시·도별) / robots
 # ─────────────────────────────────────────────
 def _urlset(urls):
@@ -1339,6 +1598,8 @@ def build_sitemap():
     # core: 메인 + 서비스 + 광역 페이지
     core = [(base + "/", "1.0")]
     core += [(f'{base}/services/{s["slug"]}.html', "0.8") for s in SERVICES]
+    core += [(f'{base}/guides/index.html', "0.7")]
+    core += [(f'{base}/guides/{g["slug"]}.html', "0.7") for g in GUIDES]
     core += [(f'{base}/{region_url(slug)}', "0.8") for slug,_,_,_ in REGIONS]
     with open(os.path.join(ROOT, "sitemap-core.xml"), "w", encoding="utf-8") as f:
         f.write(_urlset(core))
@@ -1418,6 +1679,7 @@ if __name__ == "__main__":
     build_cityhubs()
     build_units()
     build_dongs()
+    build_guides()
     build_sitemap()
     build_404()
     print("완료!")
