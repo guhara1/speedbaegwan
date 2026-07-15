@@ -36,7 +36,7 @@ def img_src(base):
 SITE = {
     "brand": "스피드 배관공사",
     "tagline": "전국 24시간 출동 배관·누수·하수구 전문",
-    "domain": "https://www.speedbaegwan.co.kr",   # ★ 실제 도메인으로 교체
+    "domain": "https://speedbaegwan.xyz",         # 실제 도메인
     "phone_display": "010-5183-4300",             # 실제 영업 전화번호
     "phone_tel": "01051834300",
     "email": "help@speedbaegwan.co.kr",           # ★ 교체
@@ -47,6 +47,9 @@ SITE = {
     "emergency": "24시 긴급출동",           # 상단바·히어로 어필 문구
     "reserve": "24시 전화예약",             # 플로팅 전화예약 버튼 문구
     "founded": "2015",
+    # 검색엔진 소유확인(메인 페이지 head에만 삽입)
+    "google_verify": "oTY8swO2v_tZ6B03-5TdMZ20WUkNhW3E7XY8vqpM36M",
+    "naver_verify": "a2cee5549ddcf927bb1eabede6db97617f9ddf78",
 }
 
 # ─────────────────────────────────────────────
@@ -353,12 +356,19 @@ def head(title, desc, canonical, og_img=None, extra_ld=""):
     base = SITE["domain"]
     if og_img is None:
         og_img = img_src("og-main")
+    # 검색엔진 소유확인 태그는 메인 페이지에만 삽입
+    verify = ""
+    if canonical == "index.html":
+        if SITE.get("google_verify"):
+            verify += f'<meta name="google-site-verification" content="{SITE["google_verify"]}">\n'
+        if SITE.get("naver_verify"):
+            verify += f'<meta name="naver-site-verification" content="{SITE["naver_verify"]}">\n'
     return f'''<!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{esc(title)}</title>
+{verify}<title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
 <link rel="canonical" href="{base}/{canonical}">
 <meta name="robots" content="index, follow, max-image-preview:large">
