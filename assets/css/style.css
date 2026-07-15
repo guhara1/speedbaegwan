@@ -430,7 +430,13 @@ section.block.mist { background: var(--mist); }
   width: 42px; height: 42px; border-radius: 50%; flex: none;
   background: rgba(255, 255, 255, .18);
 }
-.em-fab .em-ring svg { width: 22px; height: 22px; }
+/* 전화벨처럼 흔들리는 아이콘 */
+.em-fab .em-ring svg { width: 22px; height: 22px; transform-origin: center; animation: emring 1.6s ease-in-out infinite; }
+@keyframes emring {
+  0%, 55%, 100% { transform: rotate(0); }
+  60%, 70%, 80% { transform: rotate(-13deg) scale(1.06); }
+  65%, 75%, 85% { transform: rotate(13deg) scale(1.06); }
+}
 .em-fab .em-t { display: flex; flex-direction: column; line-height: 1.1; }
 .em-fab .em-t small { font-size: 11px; font-weight: 700; opacity: .95; letter-spacing: .02em; }
 .em-fab .em-t b { font-size: 16px; font-weight: 800; letter-spacing: -0.01em; }
@@ -459,7 +465,7 @@ section.block.mist { background: var(--mist); }
   .em-fab .em-t b { font-size: 15px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .em-fab { animation: none; }
+  .em-fab, .em-fab .em-ring svg { animation: none; }
 }
 
 /* =========================================================

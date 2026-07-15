@@ -455,9 +455,9 @@ def footer(depth=0):
     <span>본 사이트의 시공 사진·후기는 실제 현장 자료로 교체하여 사용하세요.</span>
   </div>
 </div></footer>
-<a class="em-fab" href="tel:{SITE["phone_tel"]}" aria-label="{esc(SITE["reserve"])} {esc(SITE["phone_display"])}">
+<a class="em-fab" href="tel:{SITE["phone_tel"]}" aria-label="{esc(SITE["emergency"])} 전화연결 {esc(SITE["phone_display"])}">
   <span class="em-ring">{ICONS["phone"]}</span>
-  <span class="em-t"><small>24시 · 지금 예약</small><b>전화예약</b></span>
+  <span class="em-t"><small>{esc(SITE["emergency"])}</small><b>전화연결</b></span>
   <span class="em-num">{esc(SITE["phone_display"])}</span>
 </a>
 <script src="{p}assets/js/main.js"></script>
@@ -836,36 +836,6 @@ def build_index():
   <div class="region-grid">{rg}</div>
 </div></section>''')
 
-    # 지역 × 서비스 롱테일 딥링크 허브 (주요 도시의 실제 구·동으로 바로 연결)
-    hub_cols = ""
-    picked_cities = []
-    for sh in HIER:
-        slug = sh["sido"]["slug"]
-        for c in sh["cities"][:2]:
-            if c["gus"]:
-                gu = c["gus"][0]
-                unit_disp = f'{c["name"]} {gu["name"]}'
-                base_url = gu_url(slug, c["name"], gu["name"])
-                dongs = dist_groups(gu["dist"])
-            else:
-                unit_disp = c["name"]
-                base_url = city_url(slug, c["name"])
-                dongs = dist_groups(c["unit"])
-            picked_cities.append((sh["sido"]["full"], slug, c["name"], unit_disp, base_url, dongs))
-    # 상위 10개 도시만 노출
-    for full, slug, city, unit_disp, base_url, dongs in picked_cities[:10]:
-        links = "".join(
-            f'<a href="{base_url}{q(g["repr"])}.html">{esc(g["repr"])} 하수구막힘·누수</a>'
-            for g in dongs[:6])
-        hub_cols += (f'<div class="hub-col"><h3><a href="{base_url}">{esc(unit_disp)}</a></h3>'
-                     f'<div class="hub-links">{links}</div></div>')
-    parts.append(f'''<section class="block mist"><div class="wrap">
-  <div class="sec-head"><span class="eyebrow">지역별 인기 시공</span>
-    <h2>우리 동네 배관·누수·하수구막힘 바로가기</h2>
-    <p>자주 찾는 지역의 동별 안내로 바로 이동하세요. 전국 시·군·구·읍·면·동 전체는 지역 페이지에서 확인할 수 있습니다.</p></div>
-  <div class="hub-grid">{hub_cols}</div>
-</div></section>''')
-
     # 고객 후기 (별점) — 메인은 9개 노출
     parts.append(reviews_block(0, "home", heading="고객이 남긴 별점 후기", n=9))
 
@@ -1070,11 +1040,6 @@ def build_regions():
   {side_card(1, full)}
   </aside>
 </div></section>''')
-        ridx = next(i for i, (s, _, _, _) in enumerate(REGIONS) if s == slug)
-        near_pairs = [(REGIONS[(ridx + k) % len(REGIONS)][2],
-                       f'{path_prefix(1)}{region_url(REGIONS[(ridx + k) % len(REGIONS)][0])}')
-                      for k in (1, 2, 3)]
-        parts.append(longtail_links(1, full, rkey, near_pairs))
         parts.append(reviews_block(1, rkey))
         parts.append(faq_html)
         parts.append(footer(1))
@@ -1142,8 +1107,6 @@ def build_cityhubs():
     <ul><li>{ICONS["pin"]}<a href="{path_prefix(3)}{region_url(slug)}">{esc(full)} 전체 보기</a></li></ul>
   </aside>
 </div></section>''')
-            near_pairs = [(g["name"], f'{path_prefix(3)}{gu_url(slug, city, g["name"])}') for g in c["gus"][:4]]
-            parts.append(longtail_links(3, city, ckey, near_pairs))
             parts.append(reviews_block(3, ckey))
             parts.append(faq_html)
             parts.append(footer(3))
@@ -1224,8 +1187,6 @@ def build_units():
     <ul>{up}</ul>
   </aside>
 </div></section>''')
-            near_pairs = [(g["repr"], f'{path_prefix(depth)}{dong_url(slug, city, gu, g["repr"])}') for g in groups[:4]]
-            parts.append(longtail_links(depth, disp, ukey, near_pairs))
             parts.append(reviews_block(depth, ukey))
             parts.append(faq_html)
             parts.append(footer(depth))
@@ -1345,8 +1306,6 @@ def build_dongs():
     <ul>{up}</ul>
   </aside>
 </div></section>''')
-                near_pairs = [(nb, f'{path_prefix(depth)}{dong_url(slug, city, gu, nb)}') for nb in near[:4]]
-                parts.append(longtail_links(depth, dong_area, key, near_pairs))
                 parts.append(reviews_block(depth, key))
                 parts.append(faq_html)
                 parts.append(footer(depth))
