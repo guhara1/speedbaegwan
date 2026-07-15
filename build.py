@@ -22,6 +22,14 @@ from urllib.parse import quote
 ROOT = os.path.dirname(os.path.abspath(__file__))
 BUILD_DATE = datetime.date.today().isoformat()   # 사이트맵 lastmod
 
+# 이미지 확장자 자동 인식: 같은 이름의 실제 사진(jpg/webp/png)이 있으면 그걸 사용
+IMG_EXTS = ("jpg", "jpeg", "webp", "png", "svg")
+def img_src(base):
+    for e in IMG_EXTS:
+        if os.path.exists(os.path.join(ROOT, "assets", "img", f"{base}.{e}")):
+            return f"assets/img/{base}.{e}"
+    return f"assets/img/{base}.svg"
+
 # ─────────────────────────────────────────────
 # 사이트 설정  ★ 실제 정보로 교체하세요 ★
 # ─────────────────────────────────────────────
@@ -341,8 +349,10 @@ DONG_TITLES = [
 # ─────────────────────────────────────────────
 # 공통 head
 # ─────────────────────────────────────────────
-def head(title, desc, canonical, og_img="assets/img/og-main.svg", extra_ld=""):
+def head(title, desc, canonical, og_img=None, extra_ld=""):
     base = SITE["domain"]
+    if og_img is None:
+        og_img = img_src("og-main")
     return f'''<!doctype html>
 <html lang="ko">
 <head>
@@ -696,14 +706,22 @@ GALLERY = [
     ("긴급 출동 현장", "emergency"), ("시공 완료 점검", "inspection"),
 ]
 
+def _has_real(base):
+    """같은 이름의 실제 사진(svg 외)이 있으면 True → 플레이스홀더를 만들지 않음"""
+    return any(os.path.exists(os.path.join(ROOT, "assets", "img", f"{base}.{e}"))
+               for e in IMG_EXTS if e != "svg")
+
 def build_images():
     d = os.path.join(ROOT, "assets", "img")
     os.makedirs(d, exist_ok=True)
-    make_placeholder(os.path.join(d, "og-main.svg"),
-                     f"{SITE['brand']}", "전국 24시간 배관·누수·하수구 출동", 1200, 630)
+    made = 0
+    if not _has_real("og-main"):
+        make_placeholder(os.path.join(d, "og-main.svg"),
+                         f"{SITE['brand']}", "전국 24시간 배관·누수·하수구 출동", 1200, 630); made += 1
     for label, slug in GALLERY:
-        make_placeholder(os.path.join(d, f"{slug}.svg"), label)
-    print(f"  이미지 {len(GALLERY)+1}장 생성")
+        if not _has_real(slug):
+            make_placeholder(os.path.join(d, f"{slug}.svg"), label); made += 1
+    print(f"  이미지 플레이스홀더 {made}장 생성(실제 사진이 있으면 건너뜀)")
 
 # ─────────────────────────────────────────────
 # 공통 조각
@@ -864,7 +882,7 @@ def build_index():
 </div></section>''')
 
     # 갤러리
-    figs = "".join(f'<figure><img src="assets/img/{slug}.svg" alt="{esc(label)} 시공 사례" loading="lazy" width="800" height="600"><figcaption>{esc(label)}</figcaption></figure>' for label,slug in GALLERY)
+    figs = "".join(f'<figure><img src="{img_src(slug)}" alt="{esc(label)} 시공 사례" loading="lazy" width="800" height="600"><figcaption>{esc(label)}</figcaption></figure>' for label,slug in GALLERY)
     parts.append(f'''<section class="block mist" id="gallery"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">시공 사례</span>
     <h2>직접 시공한 현장을 확인하세요</h2>
