@@ -732,7 +732,7 @@ def service_cards(depth):
     p = path_prefix(depth)
     cards = ""
     for s in SERVICES:
-        tags = "".join(f'<a href="{p}services/{s["slug"]}.html">{esc(k)}</a>' for k in s["keywords"][:5])
+        tags = "".join(f'<a href="{p}services/{s["slug"]}.html">{esc(k)}</a>' for k in s["keywords"])
         cards += (f'<article class="svc-card"><div class="svc-ico">{ICONS[s["icon"]]}</div>'
                   f'<h3>{esc(s["name"])}</h3><p>{esc(s["desc"])}</p>'
                   f'<div class="svc-tags">{tags}</div></article>')
@@ -748,6 +748,7 @@ def side_card(depth, area_full):
       <li>{ICONS["check"]} {esc(area_full)} 전 지역 출동</li>
       <li>{ICONS["check"]} 연중무휴 24시간</li>
       <li>{ICONS["check"]} 출동 전 비용 사전고지</li>
+      <li>{ICONS["check"]} 믿을 수 있는 지역 배관 업체</li>
       <li>{ICONS["check"]} 정품 자재·경력 기술자 시공</li>
     </ul>'''
 
