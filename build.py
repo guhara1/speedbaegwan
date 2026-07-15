@@ -1827,6 +1827,14 @@ GUIDES = [
     },
 ]
 
+def guide_body(g):
+    """확장 본문(guides_content/<slug>.html)이 있으면 사용, 없으면 인라인 html."""
+    fp = os.path.join(ROOT, "guides_content", f'{g["slug"]}.html')
+    if os.path.exists(fp):
+        with open(fp, encoding="utf-8") as f:
+            return f.read()
+    return g["html"]
+
 def build_guides():
     p1 = path_prefix(1)
     # 목록 페이지
@@ -1861,7 +1869,7 @@ def build_guides():
                   f'"headline":{json.dumps(g["title"], ensure_ascii=False)},'
                   f'"description":{json.dumps(g["desc"], ensure_ascii=False)},'
                   f'"inLanguage":"ko-KR","datePublished":"{g["date"]}","dateModified":"{BUILD_DATE}",'
-                  f'"author":{{"@type":"Organization","name":{json.dumps(SITE["brand"], ensure_ascii=False)}}},'
+                  f'"author":{{"@type":"Organization","name":{json.dumps(SITE["brand"]+" 현장팀", ensure_ascii=False)},"url":"{SITE["domain"]}/index.html#about"}},'
                   f'"publisher":{{"@type":"Organization","name":{json.dumps(SITE["brand"], ensure_ascii=False)},'
                   f'"logo":{{"@type":"ImageObject","url":"{SITE["domain"]}/assets/img/og-main.svg"}}}},'
                   f'"mainEntityOfPage":"{SITE["domain"]}/{gurl}"}}</script>')
@@ -1877,10 +1885,10 @@ def build_guides():
   <div class="crumb">{crumb(1, [("홈","index.html"),("생활정보","guides/index.html"),(g["cat"],None)])}</div>
   <h1>{esc(g["title"])}</h1>
   <p>{esc(g["lead"])}</p>
-  <div class="g-meta">{ICONS["clock"]} 최종 업데이트 {esc(BUILD_DATE)} · {esc(SITE["brand"])}</div>
+  <div class="g-meta">{ICONS["clock"]} 최종 업데이트 {esc(BUILD_DATE)} · 작성·감수 <a href="{p1}index.html#about">{esc(SITE["brand"])} 현장팀</a> · 배관 시공 경력 10년+</div>
 </div></section>''')
         parts.append(f'''<section class="block"><div class="wrap two-col">
-  <article class="prose article">{g["html"]}
+  <article class="prose article">{guide_body(g)}
     <h2>이럴 땐 전문가에게 맡기세요</h2>
     <p>위 방법으로 해결되지 않거나 반복해서 문제가 생긴다면 배관 안쪽·공용관 문제일 수 있습니다. {esc(SITE["brand"])}는 <a href="{p1}services/{svc["slug"]}.html">{esc(svc["name"])}</a>를 포함해 누수·막힘·설비 전반을 {esc(SITE["emergency"])}로 처리합니다. 무리한 자가 시공으로 배관·기물이 손상되기 전에 상담하세요.</p>
     <h2>자주 묻는 질문</h2>
