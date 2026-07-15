@@ -35,7 +35,8 @@ SITE = {
     "biz_no": "000-00-00000",                      # ★ 사업자등록번호
     "addr": "서울특별시 ○○구 ○○로 000",           # ★ 본사 주소
     "hours": "연중무휴 24시간",
-    "emergency": "24시 긴급출동",           # 긴급 출동 어필 문구
+    "emergency": "24시 긴급출동",           # 상단바·히어로 어필 문구
+    "reserve": "24시 전화예약",             # 플로팅 전화예약 버튼 문구
     "founded": "2015",
 }
 
@@ -437,9 +438,10 @@ def footer(depth=0):
     <span>본 사이트의 시공 사진·후기는 실제 현장 자료로 교체하여 사용하세요.</span>
   </div>
 </div></footer>
-<a class="em-fab" href="tel:{SITE["phone_tel"]}" aria-label="{esc(SITE["emergency"])} 전화">
+<a class="em-fab" href="tel:{SITE["phone_tel"]}" aria-label="{esc(SITE["reserve"])} {esc(SITE["phone_display"])}">
   <span class="em-ring">{ICONS["phone"]}</span>
-  <span class="em-t"><small>{esc(SITE["emergency"])} · 지금 전화</small><b>{esc(SITE["phone_display"])}</b></span>
+  <span class="em-t"><small>24시 · 지금 예약</small><b>전화예약</b></span>
+  <span class="em-num">{esc(SITE["phone_display"])}</span>
 </a>
 <script src="{p}assets/js/main.js"></script>
 </body></html>'''

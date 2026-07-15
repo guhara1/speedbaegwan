@@ -402,41 +402,54 @@ section.block.mist { background: var(--mist); }
 }
 
 /* =========================================================
-   24시 긴급출동 — 전 페이지 플로팅 콜 버튼
+   24시 전화예약 — 전 페이지 플로팅 콜 버튼 (오렌지)
+   데스크톱: 우측하단 알약형 + 전화번호
+   모바일 : 우측하단 컴팩트 FAB (엄지 도달영역·노치 안전영역)
    ========================================================= */
 .em-fab {
   position: fixed; z-index: 130; right: 22px; bottom: 22px;
-  display: inline-flex; align-items: center; gap: 11px;
-  padding: 12px 20px 12px 14px;
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 11px 20px 11px 12px;
   background: linear-gradient(135deg, var(--signal) 0%, var(--signal-deep) 100%);
   color: #fff; text-decoration: none; border-radius: 999px;
   box-shadow: 0 12px 30px rgba(229, 85, 26, .45);
+  -webkit-tap-highlight-color: transparent;
   animation: empulse 2.2s infinite;
 }
-.em-fab:hover { color: #fff; transform: translateY(-2px); box-shadow: 0 16px 38px rgba(229, 85, 26, .55); }
+.em-fab:hover { color: #fff; transform: translateY(-2px); box-shadow: 0 16px 40px rgba(229, 85, 26, .55); }
+.em-fab:active { transform: translateY(0) scale(.97); }
 .em-fab .em-ring {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 40px; height: 40px; border-radius: 50%;
+  width: 42px; height: 42px; border-radius: 50%; flex: none;
   background: rgba(255, 255, 255, .18);
 }
 .em-fab .em-ring svg { width: 22px; height: 22px; }
-.em-fab .em-t { display: flex; flex-direction: column; line-height: 1.12; }
-.em-fab .em-t small { font-size: 11.5px; font-weight: 700; opacity: .95; }
-.em-fab .em-t b { font-size: 18px; font-weight: 800; letter-spacing: -0.01em; }
+.em-fab .em-t { display: flex; flex-direction: column; line-height: 1.1; }
+.em-fab .em-t small { font-size: 11px; font-weight: 700; opacity: .95; letter-spacing: .02em; }
+.em-fab .em-t b { font-size: 16px; font-weight: 800; letter-spacing: -0.01em; }
+.em-fab .em-num {
+  font-size: 18px; font-weight: 800; padding-left: 12px;
+  border-left: 1px solid rgba(255, 255, 255, .35);
+}
 
 @keyframes empulse {
   0%   { box-shadow: 0 12px 30px rgba(229, 85, 26, .45), 0 0 0 0 rgba(255, 106, 43, .55); }
-  70%  { box-shadow: 0 12px 30px rgba(229, 85, 26, .45), 0 0 0 18px rgba(255, 106, 43, 0); }
+  70%  { box-shadow: 0 12px 30px rgba(229, 85, 26, .45), 0 0 0 16px rgba(255, 106, 43, 0); }
   100% { box-shadow: 0 12px 30px rgba(229, 85, 26, .45), 0 0 0 0 rgba(255, 106, 43, 0); }
 }
 
-/* 모바일: 하단 고정 바 형태로 크게 노출 */
+/* 모바일: 우측 하단 컴팩트 버튼 (번호는 숨기고 아이콘+라벨) */
 @media (max-width: 640px) {
   .em-fab {
-    right: 12px; left: 12px; bottom: 12px;
-    justify-content: center; border-radius: 14px; padding: 13px 16px;
+    right: 16px; left: auto;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    gap: 9px; padding: 9px 17px 9px 9px; border-radius: 999px;
   }
-  body { padding-bottom: 84px; }   /* 버튼이 마지막 콘텐츠를 가리지 않도록 */
+  .em-fab .em-ring { width: 38px; height: 38px; }
+  .em-fab .em-ring svg { width: 20px; height: 20px; }
+  .em-fab .em-num { display: none; }
+  .em-fab .em-t small { font-size: 10.5px; }
+  .em-fab .em-t b { font-size: 15px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .em-fab { animation: none; }
