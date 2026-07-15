@@ -3,3 +3,4 @@ Allow: /
 Disallow: /404.html
 
 Sitemap: https://speedbaegwan.xyz/sitemap.xml
+Sitemap: https://speedbaegwan.xyz/sitemap1.xml

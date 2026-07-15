@@ -1973,6 +1973,8 @@ def build_sitemap():
         f.write(_urlset(core))
     sitemap_files.append("sitemap-core.xml")
 
+    all_urls = list(core)   # sitemap1.xml(전체 단일 사이트맵)용 누적
+
     # 시·도별: 행정시 허브 + 행정구/시군구 + 읍·면·동
     for sh in HIER:
         sido = sh["sido"]
@@ -1989,18 +1991,23 @@ def build_sitemap():
         with open(os.path.join(ROOT, fn), "w", encoding="utf-8") as f:
             f.write(_urlset(urls))
         sitemap_files.append(fn)
+        all_urls += urls
 
-    # 색인
+    # 색인 (기존 sitemap.xml — 그대로 유지)
     idx = "".join(f'  <sitemap><loc>{base}/{fn}</loc><lastmod>{BUILD_DATE}</lastmod></sitemap>\n' for fn in sitemap_files)
     xml = f'<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{idx}</sitemapindex>\n'
     with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write(xml)
 
+    # sitemap1.xml — 전체 URL을 담은 단일 평면 사이트맵(추가)
+    with open(os.path.join(ROOT, "sitemap1.xml"), "w", encoding="utf-8") as f:
+        f.write(_urlset(all_urls))
+
     robots = (f"User-agent: *\nAllow: /\n"
-              f"Disallow: /404.html\n\nSitemap: {base}/sitemap.xml\n")
+              f"Disallow: /404.html\n\nSitemap: {base}/sitemap.xml\nSitemap: {base}/sitemap1.xml\n")
     with open(os.path.join(ROOT, "robots.txt"), "w", encoding="utf-8") as f:
         f.write(robots)
-    print(f"  sitemap.xml(색인) + {len(sitemap_files)}개 하위 사이트맵, robots.txt")
+    print(f"  sitemap.xml(색인) + {len(sitemap_files)}개 하위 사이트맵 + sitemap1.xml({len(all_urls)} URL), robots.txt")
 
 # ─────────────────────────────────────────────
 # 404 페이지 (noindex)
