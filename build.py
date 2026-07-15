@@ -16,7 +16,7 @@
 행정구역 데이터: data/districts.json (17개 시·도 / 252개 시·군·구 / 3,556개 행정동)
 ※ 행정구역 명칭은 공공데이터(행정안전부 행정동 기준, 2025)에 근거한 사실 정보입니다.
 """
-import os, html, json
+import os, html, json, re
 from urllib.parse import quote
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -136,6 +136,38 @@ def esc(s): return html.escape(s, quote=True)
 
 def logo_svg():
     return ICONS["drop"]
+
+# ─────────────────────────────────────────────
+# 행정동 그룹핑
+#  숫자로 나뉜 동(세류1동·세류2동·세류3동, 면목3·8동 등)은
+#  대표 1개(세류동, 면목동)로 묶어서 표기한다.
+#  단, 가(街)형 행정동(종로1·2·3·4가동, 용산2가동)은 그 자체가
+#  하나의 행정동이므로 묶지 않는다.
+# ─────────────────────────────────────────────
+_NUMDONG = re.compile(r'^(.+?)\d+(?:[·\-]\d+)*동$')
+
+def dong_repr(name):
+    """숫자 꼬리표를 뗀 대표 동 이름. 숫자형이 아니면 원래 이름."""
+    m = _NUMDONG.match(name)
+    if m and m.group(1):
+        return m.group(1) + "동"
+    return name
+
+def dist_groups(dist):
+    """
+    한 시·군·구의 행정동을 대표 이름으로 묶어 순서를 유지한 리스트로 반환.
+    반환: [{"repr": 대표이름, "members": [동 dict, ...]}]
+    """
+    groups, index = [], {}
+    for d in dist["dongs"]:
+        key = dong_repr(d["name"])
+        g = index.get(key)
+        if g is None:
+            g = {"repr": key, "members": []}
+            index[key] = g
+            groups.append(g)
+        g["members"].append(d)
+    return groups
 
 # ─────────────────────────────────────────────
 # URL 헬퍼 (한글 경로는 퍼센트 인코딩)
@@ -596,7 +628,7 @@ def build_regions():
         url = region_url(slug)
         dist_names = "·".join(d["disp"] for d in districts)
         n_dist = len(districts)
-        n_dong = sum(len(d["dongs"]) for d in districts)
+        n_dong = sum(len(dist_groups(d)) for d in districts)
         title = f"{full} 배관공사·누수탐지·하수구막힘 | {SITE['brand']}"
         desc = (f"{full} 전 지역 배관·누수·하수구 전문. {full} {n_dist}개 시·군·구, {n_dong}개 읍·면·동 "
                 f"어디든 24시간 출동. 누수탐지·막힘 뚫음·수전/변기 교체·고압세척.")
@@ -612,7 +644,7 @@ def build_regions():
 
         # 시·군·구 목록
         dist_links = "".join(
-            f'<a href="{slug}/{q(d["name"])}/">{esc(d["disp"])} <small>({len(d["dongs"])}개 동)</small> {ICONS["arrow"]}</a>'
+            f'<a href="{slug}/{q(d["name"])}/">{esc(d["disp"])} <small>({len(dist_groups(d))}개 동)</small> {ICONS["arrow"]}</a>'
             for d in districts)
         parts.append(f'''<section class="block"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">{esc(full)} 시·군·구</span>
@@ -648,12 +680,13 @@ def build_districts():
     for sido in DATA:
         slug, short, full = sido["slug"], sido["short"], sido["full"]
         for dist in sido["districts"]:
-            name, disp, dongs = dist["name"], dist["disp"], dist["dongs"]
+            name, disp = dist["name"], dist["disp"]
+            groups = dist_groups(dist)                 # 숫자형 동은 대표 1개로 묶음
             url = dist_url(slug, name)                 # regions/<slug>/<구>/
             area = f"{full} {disp}"
-            dong_names = "·".join(x["name"] for x in dongs)
+            dong_names = "·".join(g["repr"] for g in groups)
             title = f"{disp} 배관공사·누수·하수구막힘 | {full} {SITE['brand']}"
-            desc = (f"{full} {disp} 배관·누수·하수구 전문. {dong_names} 등 {len(dongs)}개 동 어디든 "
+            desc = (f"{full} {disp} 배관·누수·하수구 전문. {dong_names} 등 {len(groups)}개 동 어디든 "
                     f"24시간 출동. 누수탐지·하수구막힘·변기/수전 교체·고압세척.")
             ld = ld_breadcrumb([("홈","index.html"),("지역별 시공","index.html#regions"),
                                 (full,region_url(slug)),(disp,url)])
@@ -667,11 +700,11 @@ def build_districts():
 </div></section>''')
 
             dong_links = "".join(
-                f'<a href="{q(x["name"])}.html">{esc(x["name"])} {ICONS["arrow"]}</a>' for x in dongs)
+                f'<a href="{q(g["repr"])}.html">{esc(g["repr"])} {ICONS["arrow"]}</a>' for g in groups)
             parts.append(f'''<section class="block"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">{esc(disp)} 읍·면·동</span>
     <h2>{esc(disp)} 동별 배관 시공 안내</h2>
-    <p>{esc(disp)}는 {esc(dong_names)} 등 {len(dongs)}개 행정동으로 이루어져 있습니다. 우리 동네를 선택하세요.</p></div>
+    <p>{esc(disp)}는 {esc(dong_names)} 등 {len(groups)}개 행정동으로 이루어져 있습니다. 우리 동네를 선택하세요. (○○1동·2동처럼 번호로 나뉜 동은 대표 이름 하나로 안내합니다.)</p></div>
   <div class="region-grid">{dong_links}</div>
 </div></section>''')
 
@@ -704,14 +737,20 @@ def build_dongs():
     for sido in DATA:
         slug, short, full = sido["slug"], sido["short"], sido["full"]
         for dist in sido["districts"]:
-            dname, disp, dongs = dist["name"], dist["disp"], dist["dongs"]
-            dcount = len(dongs)
-            for i, x in enumerate(dongs):
-                dong = x["name"]
+            dname, disp = dist["name"], dist["disp"]
+            groups = dist_groups(dist)                 # 숫자형 동 → 대표 1개
+            gcount = len(groups)
+            for i, g in enumerate(groups):
+                dong = g["repr"]
+                members = [m["name"] for m in g["members"]]
+                # 숫자로 나뉜 동은 대표 페이지 하나가 세부 동들을 포함
+                covers = (dong not in members) or len(members) > 1
+                member_str = "·".join(members)
                 url = dong_url(slug, dname, dong)
                 area = f"{full} {disp} {dong}"
+                cover_note = (f" ({member_str} 포함)" if covers else "")
                 title = f"{disp} {dong} 배관공사·누수·하수구막힘 | {SITE['brand']}"
-                desc = (f"{full} {disp} {dong} 배관·누수·하수구 전문. {dong} 누수탐지, 하수구막힘, "
+                desc = (f"{full} {disp} {dong}{cover_note} 배관·누수·하수구 전문. 누수탐지, 하수구막힘, "
                         f"싱크대·세면대·변기 막힘, 수전/변기 교체, 고압세척까지 24시간 출동. 출동 전 비용 안내.")
                 ld = ld_breadcrumb([("홈","index.html"),("지역별 시공","index.html#regions"),
                                     (full,region_url(slug)),(disp,dist_url(slug,dname)),(dong,url)])
@@ -724,21 +763,28 @@ def build_dongs():
   <p>{esc(area)}에서 누수가 의심되거나 하수구·변기·싱크대가 막혔다면 스피드 배관공사로 연락하세요. {esc(dong)} 인근에 신속하게 출동해 원인을 정확히 진단하고 재발 없이 시공합니다. 출동 전 예상 비용을 먼저 안내합니다.</p>
 </div></section>''')
 
-                # 이웃 행정동(내부 링크): 같은 구의 앞뒤 동
+                # 대표 동에 포함된 세부 동 안내 (예: 세류1동·세류2동·세류3동)
+                cover_block = ""
+                if covers:
+                    cover_block = (f'<p><b>{esc(dong)}</b>은(는) {esc(member_str)}을(를) 포함하는 지역입니다. '
+                                   f'{esc(member_str)} 어디서든 동일하게 출동·시공합니다.</p>')
+
+                # 이웃 행정동(내부 링크): 같은 구의 앞뒤 대표 동
                 near = []
                 for k in range(1, 9):
                     if len(near) >= 8: break
-                    j = (i + k) % dcount
+                    j = (i + k) % gcount
                     if j == i: continue
-                    near.append(dongs[j])
+                    near.append(groups[j]["repr"])
                 near = near[:8]
                 near_links = "".join(
-                    f'<a href="{q(nb["name"])}.html">{esc(nb["name"])} {ICONS["arrow"]}</a>' for nb in near)
+                    f'<a href="{q(nb)}.html">{esc(nb)} {ICONS["arrow"]}</a>' for nb in near)
 
                 parts.append(f'''<section class="block"><div class="wrap two-col">
   <div class="prose">
     <h2>{esc(dong)} 배관 문제, 스피드 배관공사가 해결합니다</h2>
     <p>{esc(area)}는 {esc(disp)}에 속한 지역으로, 오래된 주택과 아파트·상가가 함께 있어 배관 노후로 인한 누수·막힘 문의가 꾸준합니다. 천장이나 벽의 얼룩, 원인 모를 수도요금 증가는 누수 신호일 수 있고, 물이 잘 안 내려가거나 역류한다면 배관 막힘일 수 있습니다.</p>
+    {cover_block}
     <p>{esc(dong)}에서 이런 증상이 있다면 방치하지 말고 상담하세요. 청음식·가스식 누수탐지 장비와 관로 내시경으로 정확히 진단한 뒤, 필요한 시공만 확정 견적으로 안내하고 진행합니다.</p>
     <h3>{esc(dong)}에서 이용 가능한 서비스</h3>
     <div class="svc-cats" style="grid-template-columns:1fr 1fr;margin-top:14px">{service_cards(3)}</div>
@@ -761,7 +807,7 @@ def build_dongs():
                 with open(os.path.join(outdir, dong + ".html"), "w", encoding="utf-8") as f:
                     f.write(render(3, parts))
                 n += 1
-    print(f"  regions/*/*/  {n}개 (읍·면·동 = 행정동)")
+    print(f"  regions/*/*/  {n}개 (대표 행정동)")
 
 # ─────────────────────────────────────────────
 # 사이트맵 (색인 + core + 시·도별) / robots
@@ -790,8 +836,8 @@ def build_sitemap():
         urls = []
         for dist in sido["districts"]:
             urls.append((f'{base}/{dist_url(slug, dist["name"])}', "0.6"))
-            for x in dist["dongs"]:
-                urls.append((f'{base}/{dong_url(slug, dist["name"], x["name"])}', "0.5"))
+            for g in dist_groups(dist):
+                urls.append((f'{base}/{dong_url(slug, dist["name"], g["repr"])}', "0.5"))
         fn = f"sitemap-{slug}.xml"
         with open(os.path.join(ROOT, fn), "w", encoding="utf-8") as f:
             f.write(_urlset(urls))
