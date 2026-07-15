@@ -2012,7 +2012,8 @@ def build_sitemap():
         f.write(_urlset(all_urls))
 
     robots = (f"User-agent: *\nAllow: /\n"
-              f"Disallow: /404.html\n\nSitemap: {base}/sitemap.xml\nSitemap: {base}/sitemap1.xml\n")
+              f"Disallow: /404.html\nDisallow: /guides_content/\n\n"
+              f"Sitemap: {base}/sitemap.xml\nSitemap: {base}/sitemap1.xml\n")
     with open(os.path.join(ROOT, "robots.txt"), "w", encoding="utf-8") as f:
         f.write(robots)
     print(f"  sitemap.xml(색인) + {len(sitemap_files)}개 하위 사이트맵 + sitemap1.xml({len(all_urls)} URL), robots.txt")

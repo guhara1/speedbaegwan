@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /404.html
+Disallow: /guides_content/
 
 Sitemap: https://speedbaegwan.xyz/sitemap.xml
 Sitemap: https://speedbaegwan.xyz/sitemap1.xml
