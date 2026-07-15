@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#0A1A2F"/><stop offset=".55" stop-color="#12283F"/><stop offset="1" stop-color="#0B7C8A"/>
+</linearGradient></defs>
+<rect width="800" height="600" fill="url(#g)"/>
+<g fill="none" stroke="#ffffff" stroke-opacity="0.06" stroke-width="2">
+<line x1="0" y1="0" x2="-160" y2="600"/><line x1="80" y1="0" x2="-80" y2="600"/><line x1="160" y1="0" x2="0" y2="600"/><line x1="240" y1="0" x2="80" y2="600"/><line x1="320" y1="0" x2="160" y2="600"/><line x1="400" y1="0" x2="240" y2="600"/><line x1="480" y1="0" x2="320" y2="600"/><line x1="560" y1="0" x2="400" y2="600"/><line x1="640" y1="0" x2="480" y2="600"/><line x1="720" y1="0" x2="560" y2="600"/><line x1="800" y1="0" x2="640" y2="600"/><line x1="880" y1="0" x2="720" y2="600"/><line x1="960" y1="0" x2="800" y2="600"/><line x1="1040" y1="0" x2="880" y2="600"/>
+</g>
+<g transform="translate(400.0,260.0)" fill="none" stroke="#0EA5B7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<path transform="translate(-26,-52) scale(2.2)" d="M12 2s6 6.5 6 11a6 6 0 1 1-12 0c0-4.5 6-11 6-11z"/>
+</g>
+<text x="50%" y="370.0" fill="#ffffff" font-family="Pretendard, sans-serif" font-size="34" font-weight="800" text-anchor="middle">긴급 출동 현장</text>
+<text x="50%" y="412.0" fill="#9FB4C6" font-family="Pretendard, sans-serif" font-size="19" text-anchor="middle">실제 시공 사진으로 교체하세요</text>
+<text x="50%" y="566" fill="#FF6A2B" font-family="Pretendard, sans-serif" font-size="18" font-weight="700" text-anchor="middle">스피드 배관공사</text>
+</svg>
