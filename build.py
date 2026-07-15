@@ -16,10 +16,11 @@
 행정구역 데이터: data/districts.json (17개 시·도 / 252개 시·군·구 / 3,556개 행정동)
 ※ 행정구역 명칭은 공공데이터(행정안전부 행정동 기준, 2025)에 근거한 사실 정보입니다.
 """
-import os, html, json, re
+import os, html, json, re, datetime
 from urllib.parse import quote
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+BUILD_DATE = datetime.date.today().isoformat()   # 사이트맵 lastmod
 
 # ─────────────────────────────────────────────
 # 사이트 설정  ★ 실제 정보로 교체하세요 ★
@@ -361,6 +362,9 @@ def head(title, desc, canonical, og_img="assets/img/og-main.svg", extra_ld=""):
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0A1A2F">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230EA5B7'/%3E%3Cpath d='M12 4s5 5.5 5 9a5 5 0 0 1-10 0c0-3.5 5-9 5-9z' fill='white'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="{{CSS}}">
 {extra_ld}
 </head>
@@ -477,6 +481,16 @@ def ld_business():
   {agg_rating_ld()},
   "review":[{reviews_ld(REVIEWS)}]
 }}
+</script>'''
+
+def ld_site():
+    """WebSite + Organization (브랜드 엔티티 강화)."""
+    base = SITE["domain"]
+    return f'''<script type="application/ld+json">
+{{"@context":"https://schema.org","@graph":[
+{{"@type":"WebSite","@id":"{base}/#website","url":"{base}/","name":"{SITE['brand']}","inLanguage":"ko-KR","publisher":{{"@id":"{base}/#org"}}}},
+{{"@type":"Organization","@id":"{base}/#org","name":"{SITE['brand']}","url":"{base}/","logo":"{base}/assets/img/og-main.svg","telephone":"{SITE['phone_display']}","email":"{SITE['email']}","address":{{"@type":"PostalAddress","streetAddress":"{SITE['addr']}","addressCountry":"KR"}},"areaServed":"KR","contactPoint":{{"@type":"ContactPoint","telephone":"{SITE['phone_display']}","contactType":"customer service","areaServed":"KR","availableLanguage":"Korean"}}}}
+]}}
 </script>'''
 
 def ld_breadcrumb(items):
@@ -721,7 +735,7 @@ def side_card(depth, area_full):
 def build_index():
     title = f"{SITE['brand']} | 전국 배관공사·누수탐지·하수구막힘 24시간 출동"
     desc = "전국 배관공사 전문 스피드 배관공사. 누수탐지·누수공사, 하수구·배관 막힘, 변기·수전 교체, 고압세척까지 24시간 신속 출동. 출동 전 비용 안내, 정품 자재 시공."
-    parts = [head(title, desc, "index.html", extra_ld=ld_business())]
+    parts = [head(title, desc, "index.html", extra_ld=ld_site() + ld_business())]
     parts.append(header(0))
 
     # 히어로
@@ -1314,7 +1328,8 @@ def build_dongs():
 def _urlset(urls):
     items = ""
     for loc, pr in urls:
-        items += f'  <url><loc>{loc}</loc><changefreq>weekly</changefreq><priority>{pr}</priority></url>\n'
+        items += (f'  <url><loc>{loc}</loc><lastmod>{BUILD_DATE}</lastmod>'
+                  f'<changefreq>weekly</changefreq><priority>{pr}</priority></url>\n')
     return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{items}</urlset>\n'
 
 def build_sitemap():
@@ -1347,15 +1362,52 @@ def build_sitemap():
         sitemap_files.append(fn)
 
     # 색인
-    idx = "".join(f'  <sitemap><loc>{base}/{fn}</loc></sitemap>\n' for fn in sitemap_files)
+    idx = "".join(f'  <sitemap><loc>{base}/{fn}</loc><lastmod>{BUILD_DATE}</lastmod></sitemap>\n' for fn in sitemap_files)
     xml = f'<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{idx}</sitemapindex>\n'
     with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write(xml)
 
-    robots = f"User-agent: *\nAllow: /\n\nSitemap: {base}/sitemap.xml\n"
+    robots = (f"User-agent: *\nAllow: /\n"
+              f"Disallow: /404.html\n\nSitemap: {base}/sitemap.xml\n")
     with open(os.path.join(ROOT, "robots.txt"), "w", encoding="utf-8") as f:
         f.write(robots)
     print(f"  sitemap.xml(색인) + {len(sitemap_files)}개 하위 사이트맵, robots.txt")
+
+# ─────────────────────────────────────────────
+# 404 페이지 (noindex)
+# ─────────────────────────────────────────────
+def build_404():
+    # 깊은 경로에서도 깨지지 않도록 self-contained(인라인 스타일·절대경로) 구성
+    html_doc = f'''<!doctype html>
+<html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>페이지를 찾을 수 없습니다 (404) | {esc(SITE['brand'])}</title>
+<meta name="robots" content="noindex, follow">
+<style>
+  body{{margin:0;font-family:-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    background:linear-gradient(160deg,#0A1A2F,#12283F);color:#fff;min-height:100vh;
+    display:grid;place-items:center;text-align:center;padding:24px}}
+  .box{{max-width:520px}}
+  .code{{font-size:84px;font-weight:900;letter-spacing:-.04em;color:#0EA5B7;line-height:1}}
+  h1{{font-size:24px;margin:14px 0 8px}} p{{color:#C7D6E4;margin:0 0 24px;line-height:1.6}}
+  .row{{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}}
+  a.btn{{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:12px;
+    font-weight:800;text-decoration:none}}
+  .p{{background:#FF6A2B;color:#fff}} .g{{background:rgba(255,255,255,.12);color:#fff}}
+</style></head><body>
+<div class="box">
+  <div class="code">404</div>
+  <h1>페이지를 찾을 수 없습니다</h1>
+  <p>주소가 바뀌었거나 삭제된 페이지일 수 있습니다.<br>아래에서 원하시는 곳으로 이동하세요.</p>
+  <div class="row">
+    <a class="btn p" href="/">홈으로</a>
+    <a class="btn g" href="/index.html#regions">지역별 시공 보기</a>
+    <a class="btn g" href="tel:{SITE["phone_tel"]}">{esc(SITE["reserve"])} {esc(SITE["phone_display"])}</a>
+  </div>
+</div></body></html>'''
+    with open(os.path.join(ROOT, "404.html"), "w", encoding="utf-8") as f:
+        f.write(html_doc)
+    print("  404.html")
 
 if __name__ == "__main__":
     print("빌드 시작…")
@@ -1367,4 +1419,5 @@ if __name__ == "__main__":
     build_units()
     build_dongs()
     build_sitemap()
+    build_404()
     print("완료!")
