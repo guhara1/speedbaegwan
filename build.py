@@ -132,6 +132,9 @@ ICONS = {
     "badge": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M8.2 12 7 22l5-3 5 3-1.2-10"/></svg>',
     "user": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-6 8-6s8 2 8 6"/></svg>',
     "doc": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></svg>',
+    "star": '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 5.9 6.5.95-4.7 4.58 1.11 6.47L12 17.9l-5.81 3.05 1.11-6.47-4.7-4.58 6.5-.95z"/></svg>',
+    "chat": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+    "search": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
 }
 
 def esc(s): return html.escape(s, quote=True)
@@ -470,7 +473,9 @@ def ld_business():
   "openingHoursSpecification":{{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"00:00","closes":"23:59"}},
   "areaServed":[{areas}],
   "makesOffer":[{services}],
-  "founder":{{"@type":"Person","name":"{SITE['ceo']}"}}
+  "founder":{{"@type":"Person","name":"{SITE['ceo']}"}},
+  {agg_rating_ld()},
+  "review":[{reviews_ld(REVIEWS)}]
 }}
 </script>'''
 
@@ -489,12 +494,127 @@ def ld_service(name, desc, url):
 {{"@context":"https://schema.org","@type":"Service","serviceType":"{name}","provider":{{"@type":"Plumber","name":"{SITE['brand']}","telephone":"{SITE['phone_display']}"}},"areaServed":"대한민국","description":"{desc}","url":"{base}/{url}"}}
 </script>'''
 
-def ld_local(area_name, url, desc):
-    """지역(시·도/구·군/동)별 LocalBusiness"""
+# ─────────────────────────────────────────────
+# 고객 후기 (★ 반드시 실제 후기로 교체하세요 ★)
+#  ⚠️ 가짜 후기/별점을 구조화 데이터로 표기하면 검색엔진 정책 위반(패널티)입니다.
+#     아래는 레이아웃 확인용 '샘플'이며, 실제 고객 동의를 받은 후기로 교체 후 게시하세요.
+# ─────────────────────────────────────────────
+REVIEWS = [
+    {"author": "김○○ 고객님", "rating": 5, "service": "하수구막힘", "date": "2026-05-21",
+     "text": "밤늦게 하수구가 역류했는데 전화하니 40분 만에 오셨어요. 원인 보여주시고 재발 없이 뚫어주셔서 감사합니다."},
+    {"author": "이○○ 고객님", "rating": 5, "service": "누수탐지", "date": "2026-05-08",
+     "text": "수도요금이 갑자기 많이 나와 불렀는데 벽 안 뜯고 누수 지점을 정확히 찾아주셨습니다. 비용도 미리 알려줘서 믿음이 갔어요."},
+    {"author": "박○○ 고객님", "rating": 5, "service": "변기막힘", "date": "2026-04-27",
+     "text": "변기가 막혀서 급하게 연락드렸는데 바로 출동해 깔끔하게 해결해 주셨습니다. 마무리 청소까지 꼼꼼하셨어요."},
+    {"author": "최○○ 고객님", "rating": 4, "service": "수전교체", "date": "2026-04-15",
+     "text": "주방 수전 교체했는데 제품 추천부터 설치까지 친절했어요. 예약도 편하고 시간 약속 잘 지키셨습니다."},
+    {"author": "정○○ 고객님", "rating": 5, "service": "고압세척", "date": "2026-03-30",
+     "text": "상가 배관 고압세척 맡겼는데 내시경으로 상태 보여주고 설명해 주셔서 안심됐습니다. 다음에도 부탁드릴게요."},
+    {"author": "강○○ 고객님", "rating": 5, "service": "누수공사", "date": "2026-03-12",
+     "text": "욕실 누수 때문에 아랫집까지 피해볼 뻔했는데 빠르게 잡아주셨어요. 견적 그대로, 추가 비용 없이 처리됐습니다."},
+    {"author": "윤○○ 고객님", "rating": 5, "service": "세면대막힘", "date": "2026-02-24",
+     "text": "세면대가 내려가지 않아 스트레스였는데 금방 뚫어주시고 관리 팁도 알려주셨어요. 응대가 정말 친절합니다."},
+    {"author": "임○○ 고객님", "rating": 4, "service": "변기교체", "date": "2026-02-05",
+     "text": "노후 변기 교체했는데 깔끔하게 마감해 주셨습니다. 24시간 예약 전화가 되니 급할 때 든든하네요."},
+]
+
+def _agg():
+    vals = [r["rating"] for r in REVIEWS]
+    return round(sum(vals) / len(vals), 1), len(vals)
+
+RATING_VALUE, RATING_COUNT = _agg()
+
+def agg_rating_ld():
+    return (f'"aggregateRating":{{"@type":"AggregateRating",'
+            f'"ratingValue":"{RATING_VALUE}","reviewCount":"{RATING_COUNT}",'
+            f'"bestRating":"5","worstRating":"1"}}')
+
+def reviews_ld(subset):
+    items = []
+    for r in subset:
+        items.append(
+            '{"@type":"Review","author":{"@type":"Person","name":%s},'
+            '"datePublished":"%s","reviewRating":{"@type":"Rating","ratingValue":"%d","bestRating":"5"},'
+            '"reviewBody":%s}' % (json.dumps(r["author"], ensure_ascii=False), r["date"],
+                                  r["rating"], json.dumps(r["text"], ensure_ascii=False)))
+    return ",".join(items)
+
+def stars_html(rating):
+    full = int(round(rating))
+    cells = "".join(f'<span class="star {"on" if i < full else "off"}">{ICONS["star"]}</span>' for i in range(5))
+    return f'<span class="stars" role="img" aria-label="별점 5점 만점에 {rating}점">{cells}</span>'
+
+def reviews_block(depth, key, heading="고객 후기", note=True):
+    """지역별로 서로 다른 후기 2~3개를 노출(중복 방지)."""
+    subset = picks(REVIEWS, 3, key, "rv")
+    cards = ""
+    for r in subset:
+        cards += (f'<article class="rv-card">'
+                  f'<div class="rv-top">{stars_html(r["rating"])}<span class="rv-tag">{esc(r["service"])}</span></div>'
+                  f'<p>“{esc(r["text"])}”</p>'
+                  f'<div class="rv-by">{esc(r["author"])} · {esc(r["date"])}</div></article>')
+    disclaimer = ('<p class="rv-note">※ 위 후기는 레이아웃 예시입니다. 실제 고객 동의를 받은 후기로 교체해 사용하세요.</p>'
+                  if note else "")
+    return f'''<section class="block" id="reviews"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">고객 후기</span>
+    <h2>{esc(heading)}</h2>
+    <div class="rv-agg">{stars_html(RATING_VALUE)}<b>{RATING_VALUE}</b><span>/ 5.0 · 후기 {RATING_COUNT}건</span></div></div>
+  <div class="rv-grid">{cards}</div>
+  {disclaimer}
+</div></section>'''
+
+def ld_local(area_name, url, desc, with_reviews=True):
+    """지역(시·도/구·군/동)별 LocalBusiness (+별점 집계)"""
     base = SITE["domain"]
+    rating = ("," + agg_rating_ld()) if with_reviews else ""
     return f'''<script type="application/ld+json">
-{{"@context":"https://schema.org","@type":"Plumber","name":{json.dumps(SITE['brand']+" "+area_name, ensure_ascii=False)},"telephone":"{SITE['phone_display']}","areaServed":{{"@type":"AdministrativeArea","name":{json.dumps(area_name, ensure_ascii=False)}}},"url":"{base}/{url}","description":{json.dumps(desc, ensure_ascii=False)}}}
+{{"@context":"https://schema.org","@type":"Plumber","name":{json.dumps(SITE['brand']+" "+area_name, ensure_ascii=False)},"telephone":"{SITE['phone_display']}","areaServed":{{"@type":"AdministrativeArea","name":{json.dumps(area_name, ensure_ascii=False)}}},"url":"{base}/{url}","description":{json.dumps(desc, ensure_ascii=False)}{rating}}}
 </script>'''
+
+# 지역 FAQ (FAQPage 스키마 + 롱테일 Q&A). {area} 치환.
+FAQ_POOL = [
+    ("{area} 출동 비용이 따로 있나요?", "증상과 위치를 말씀해 주시면 예상 비용을 먼저 안내하고, 방문 진단 후 확정 견적을 드립니다. 동의 없이 추가 비용은 발생하지 않습니다."),
+    ("{area}도 야간·주말에 출동하나요?", "네, 연중무휴 24시간 상담·출동합니다. 급하시면 언제든 전화 주시면 가까운 기술자가 즉시 출발합니다."),
+    ("{area}에서 하수구가 자주 막히는데 재발 없이 되나요?", "관로 내시경으로 막힘 원인을 확인한 뒤 고압세척으로 근본 원인을 제거해 재발을 줄입니다. 구조적 문제는 개선 방법을 함께 안내합니다."),
+    ("{area} 누수를 벽을 뜯지 않고 찾을 수 있나요?", "청음식·가스식 누수탐지 장비로 벽·바닥 속 지점을 비파괴 방식으로 찾아 손상을 최소화합니다."),
+    ("{area}까지 얼마나 빨리 도착하나요?", "가까운 기술자가 배정되어 신속히 출발합니다. 전화 시 예상 도착 시간을 미리 안내해 드립니다."),
+    ("{area}에서 변기·수전 교체도 당일 되나요?", "자재가 준비되면 대부분 당일 시공합니다. 제품 추천부터 설치·마감 점검까지 한 번에 처리합니다."),
+    ("{area} 전화예약은 어떻게 하나요?", "24시간 전화 예약이 가능합니다. 증상과 희망 시간을 말씀해 주시면 방문 시간을 잡아드립니다."),
+]
+
+def ld_faq(pairs):
+    body = ",".join(
+        '{"@type":"Question","name":%s,"acceptedAnswer":{"@type":"Answer","text":%s}}'
+        % (json.dumps(q, ensure_ascii=False), json.dumps(a, ensure_ascii=False)) for q, a in pairs)
+    return f'<script type="application/ld+json">{{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{body}]}}</script>'
+
+def area_faq(depth, area, key):
+    """지역별 FAQ 3개(변주) + FAQPage 스키마 반환 (html, ld)."""
+    chosen = picks(FAQ_POOL, 3, key, "faq")
+    pairs = [(q.format(area=area), a.format(area=area)) for q, a in chosen]
+    html_fq = "".join(f'<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in pairs)
+    html = f'''<section class="block mist"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">자주 묻는 질문</span><h2>{esc(area)} 배관 시공 자주 묻는 질문</h2></div>
+  <div class="faq">{html_fq}</div>
+</div></section>'''
+    return html, ld_faq(pairs)
+
+def longtail_links(depth, disp, key, near_pairs):
+    """롱테일 내부링크 블록: '지역+서비스키워드' 앵커 → 서비스 페이지, 인접지역 링크."""
+    p = path_prefix(depth)
+    combos = []
+    for s in SERVICES:
+        for kw in picks(s["keywords"], 2, key, "lt", s["slug"]):
+            combos.append((f'{disp} {kw}', f'{p}services/{s["slug"]}.html'))
+    # 지역별로 순서를 섞어 페이지마다 다른 앵커 노출
+    order = sorted(range(len(combos)), key=lambda i: _hkey(key, "o", i))
+    combos = [combos[i] for i in order][:10]
+    combo_links = "".join(f'<a href="{u}">{ICONS["search"]} {esc(t)}</a>' for t, u in combos)
+    near_links = "".join(f'<a href="{u}">{ICONS["pin"]} {esc(t)}</a>' for t, u in near_pairs)
+    return f'''<section class="block"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">인기 시공 주제</span><h2>{esc(disp)}에서 많이 찾는 시공</h2></div>
+  <div class="tag-cloud">{combo_links}{near_links}</div>
+</div></section>'''
 
 # ─────────────────────────────────────────────
 # 이미지 (SVG 플레이스홀더)
@@ -652,6 +772,39 @@ def build_index():
   <div class="region-grid">{rg}</div>
 </div></section>''')
 
+    # 지역 × 서비스 롱테일 딥링크 허브 (주요 도시의 실제 구·동으로 바로 연결)
+    hub_cols = ""
+    picked_cities = []
+    for sh in HIER:
+        slug = sh["sido"]["slug"]
+        for c in sh["cities"][:2]:
+            if c["gus"]:
+                gu = c["gus"][0]
+                unit_disp = f'{c["name"]} {gu["name"]}'
+                base_url = gu_url(slug, c["name"], gu["name"])
+                dongs = dist_groups(gu["dist"])
+            else:
+                unit_disp = c["name"]
+                base_url = city_url(slug, c["name"])
+                dongs = dist_groups(c["unit"])
+            picked_cities.append((sh["sido"]["full"], slug, c["name"], unit_disp, base_url, dongs))
+    # 상위 10개 도시만 노출
+    for full, slug, city, unit_disp, base_url, dongs in picked_cities[:10]:
+        links = "".join(
+            f'<a href="{base_url}{q(g["repr"])}.html">{esc(g["repr"])} 하수구막힘·누수</a>'
+            for g in dongs[:6])
+        hub_cols += (f'<div class="hub-col"><h3><a href="{base_url}">{esc(unit_disp)}</a></h3>'
+                     f'<div class="hub-links">{links}</div></div>')
+    parts.append(f'''<section class="block mist"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">지역별 인기 시공</span>
+    <h2>우리 동네 배관·누수·하수구막힘 바로가기</h2>
+    <p>자주 찾는 지역의 동별 안내로 바로 이동하세요. 전국 시·군·구·읍·면·동 전체는 지역 페이지에서 확인할 수 있습니다.</p></div>
+  <div class="hub-grid">{hub_cols}</div>
+</div></section>''')
+
+    # 고객 후기 (별점)
+    parts.append(reviews_block(0, "home", heading="고객이 남긴 별점 후기"))
+
     # 갤러리
     figs = "".join(f'<figure><img src="assets/img/{slug}.svg" alt="{esc(label)} 시공 사례" loading="lazy" width="800" height="600"><figcaption>{esc(label)}</figcaption></figure>' for label,slug in GALLERY)
     parts.append(f'''<section class="block mist" id="gallery"><div class="wrap">
@@ -799,8 +952,11 @@ def build_regions():
         title = f"{full} 배관공사·누수탐지·하수구막힘 | {SITE['brand']}"
         desc = (f"{full} 전 지역 배관·누수·하수구 전문. {full} {n_city}개 시·군·구, {n_dong}개 읍·면·동 "
                 f"어디든 24시간 출동. 누수탐지·막힘 뚫음·수전/변기 교체·고압세척.")
+        rkey = ("region", slug)
+        faq_html, faq_ld = area_faq(1, full, rkey)
         ld = ld_breadcrumb([("홈","index.html"),("지역별 시공","index.html#regions"),(full,url)])
         ld += ld_local(full, url, f"{full} 배관·누수·하수구 전문 시공")
+        ld += faq_ld
         parts = [head(title, desc, url, extra_ld=ld)]
         parts.append(header(1))
         parts.append(f'''<section class="subhero"><div class="wrap">
@@ -837,6 +993,13 @@ def build_regions():
   {side_card(1, full)}
   </aside>
 </div></section>''')
+        ridx = next(i for i, (s, _, _, _) in enumerate(REGIONS) if s == slug)
+        near_pairs = [(REGIONS[(ridx + k) % len(REGIONS)][2],
+                       f'{path_prefix(1)}{region_url(REGIONS[(ridx + k) % len(REGIONS)][0])}')
+                      for k in (1, 2, 3)]
+        parts.append(longtail_links(1, full, rkey, near_pairs))
+        parts.append(reviews_block(1, rkey))
+        parts.append(faq_html)
         parts.append(footer(1))
         d = os.path.join(ROOT, "regions")
         os.makedirs(d, exist_ok=True)
@@ -864,9 +1027,12 @@ def build_cityhubs():
             title = f"{city} 배관공사·누수·하수구막힘 | {full} {SITE['brand']}"
             desc = (f"{full} {city} 배관·누수·하수구 전문. {gu_names} 등 {len(c['gus'])}개 구, "
                     f"{n_dong}개 동 어디든 24시간 출동. 누수탐지·하수구막힘·변기/수전 교체·고압세척.")
+            ckey = ("city", slug, city)
+            faq_html, faq_ld = area_faq(3, area, ckey)
             ld = ld_breadcrumb([("홈","index.html"),("지역별 시공","index.html#regions"),
                                 (full,region_url(slug)),(city,url)])
             ld += ld_local(area, url, f"{area} 배관·누수·하수구 전문 시공")
+            ld += faq_ld
             parts = [head(title, desc, url, extra_ld=ld)]
             parts.append(header(3))
             parts.append(f'''<section class="subhero"><div class="wrap">
@@ -899,6 +1065,10 @@ def build_cityhubs():
     <ul><li>{ICONS["pin"]}<a href="{path_prefix(3)}{region_url(slug)}">{esc(full)} 전체 보기</a></li></ul>
   </aside>
 </div></section>''')
+            near_pairs = [(g["name"], f'{path_prefix(3)}{gu_url(slug, city, g["name"])}') for g in c["gus"][:4]]
+            parts.append(longtail_links(3, city, ckey, near_pairs))
+            parts.append(reviews_block(3, ckey))
+            parts.append(faq_html)
             parts.append(footer(3))
             outdir = os.path.join(ROOT, "regions", slug, city)
             os.makedirs(outdir, exist_ok=True)
@@ -929,14 +1099,16 @@ def build_units():
             if gu:
                 bc.append((city, city_url(slug, city)))
             bc.append((disp if not gu else gu, None))
+            ukey = (slug, city, gu or "", "unit")
+            faq_html, faq_ld = area_faq(depth, area, ukey)
             ld = ld_breadcrumb([("홈","index.html"),("지역별 시공","index.html#regions"),
                                 (full,region_url(slug))]
                                + ([(city,city_url(slug,city))] if gu else [])
                                + [(disp, url)])
             ld += ld_local(area, url, f"{area} 배관·누수·하수구 전문 시공")
+            ld += faq_ld
             parts = [head(title, desc, url, extra_ld=ld)]
             parts.append(header(depth))
-            ukey = (slug, city, gu or "", "unit")
             u_intro = pick(DONG_INTRO, *ukey).format(area=esc(area), dong=esc(disp))
             parts.append(f'''<section class="subhero"><div class="wrap">
   <div class="crumb">{crumb(depth, bc)}</div>
@@ -975,6 +1147,10 @@ def build_units():
     <ul>{up}</ul>
   </aside>
 </div></section>''')
+            near_pairs = [(g["repr"], f'{path_prefix(depth)}{dong_url(slug, city, gu, g["repr"])}') for g in groups[:4]]
+            parts.append(longtail_links(depth, disp, ukey, near_pairs))
+            parts.append(reviews_block(depth, ukey))
+            parts.append(faq_html)
             parts.append(footer(depth))
             outdir = os.path.join(ROOT, "regions", slug, city, gu) if gu else os.path.join(ROOT, "regions", slug, city)
             os.makedirs(outdir, exist_ok=True)
@@ -1016,11 +1192,14 @@ def build_dongs():
                     bc.append((city, city_url(slug, city)))
                 bc.append((gu if gu else city, unit_listing))
                 bc.append((dong, None))
+                dong_area = f"{disp} {dong}"
+                faq_html, faq_ld = area_faq(depth, dong_area, key)
                 ld = ld_breadcrumb([("홈","index.html"),("지역별 시공","index.html#regions"),
                                     (full,region_url(slug))]
                                    + ([(city,city_url(slug,city))] if gu else [])
                                    + [(disp, unit_listing),(dong,url)])
                 ld += ld_local(area, url, f"{area} 배관·누수·하수구 전문 시공")
+                ld += faq_ld
                 parts = [head(title, desc, url, extra_ld=ld)]
                 parts.append(header(depth))
                 intro = pick(DONG_INTRO, *key).format(area=esc(area), dong=esc(dong))
@@ -1089,6 +1268,10 @@ def build_dongs():
     <ul>{up}</ul>
   </aside>
 </div></section>''')
+                near_pairs = [(nb, f'{path_prefix(depth)}{dong_url(slug, city, gu, nb)}') for nb in near[:4]]
+                parts.append(longtail_links(depth, dong_area, key, near_pairs))
+                parts.append(reviews_block(depth, key))
+                parts.append(faq_html)
                 parts.append(footer(depth))
                 outdir = os.path.join(ROOT, "regions", slug, city, gu) if gu else os.path.join(ROOT, "regions", slug, city)
                 os.makedirs(outdir, exist_ok=True)
