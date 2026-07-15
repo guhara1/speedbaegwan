@@ -384,6 +384,7 @@ def head(title, desc, canonical, og_img=None, extra_ld=""):
 <meta name="theme-color" content="#0A1A2F">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%230EA5B7'/%3E%3Cpath d='M12 4s5 5.5 5 9a5 5 0 0 1-10 0c0-3.5 5-9 5-9z' fill='white'/%3E%3C/svg%3E">
 <link rel="preload" href="{{FONT}}" as="font" type="font/woff2" crossorigin>
+<link rel="alternate" type="application/rss+xml" title="{esc(SITE['brand'])} 생활정보" href="{base}/rss.xml">
 <link rel="stylesheet" href="{{CSS}}">
 {extra_ld}
 </head>
@@ -1911,6 +1912,44 @@ def _ensure_dir(*parts):
     return d
 
 # ─────────────────────────────────────────────
+# RSS 피드 (생활정보 가이드) — 네이버/구글 제출용
+# ─────────────────────────────────────────────
+def build_rss():
+    from email.utils import format_datetime
+    base = SITE["domain"]
+    KST = datetime.timezone(datetime.timedelta(hours=9))
+    def rfc822(datestr, h=9):
+        dt = datetime.datetime.strptime(datestr, "%Y-%m-%d").replace(hour=h, tzinfo=KST)
+        return format_datetime(dt)
+    def x(s):
+        return html.escape(s, quote=False)
+    build_dt = datetime.datetime.now(KST) if False else datetime.datetime.strptime(BUILD_DATE, "%Y-%m-%d").replace(hour=9, tzinfo=KST)
+    items = ""
+    for g in sorted(GUIDES, key=lambda z: z["date"], reverse=True):
+        url = f'{base}/guides/{g["slug"]}.html'
+        items += (f'  <item>\n'
+                  f'    <title>{x(g["title"])}</title>\n'
+                  f'    <link>{url}</link>\n'
+                  f'    <guid isPermaLink="true">{url}</guid>\n'
+                  f'    <category>{x(g["cat"])}</category>\n'
+                  f'    <pubDate>{rfc822(g["date"])}</pubDate>\n'
+                  f'    <description><![CDATA[{g["desc"]}]]></description>\n'
+                  f'  </item>\n')
+    rss = (f'<?xml version="1.0" encoding="UTF-8"?>\n'
+           f'<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
+           f'<channel>\n'
+           f'  <title>{x(SITE["brand"])} 생활정보</title>\n'
+           f'  <link>{base}/guides/index.html</link>\n'
+           f'  <atom:link href="{base}/rss.xml" rel="self" type="application/rss+xml"/>\n'
+           f'  <description>{x(SITE["brand"])} — 배관·누수·하수구 생활정보와 셀프 가이드</description>\n'
+           f'  <language>ko</language>\n'
+           f'  <lastBuildDate>{format_datetime(build_dt)}</lastBuildDate>\n'
+           f'{items}</channel>\n</rss>\n')
+    with open(os.path.join(ROOT, "rss.xml"), "w", encoding="utf-8") as f:
+        f.write(rss)
+    print(f"  rss.xml (가이드 {len(GUIDES)}편)")
+
+# ─────────────────────────────────────────────
 # 사이트맵 (색인 + core + 시·도별) / robots
 # ─────────────────────────────────────────────
 def _urlset(urls):
@@ -2009,6 +2048,7 @@ if __name__ == "__main__":
     build_units()
     build_dongs()
     build_guides()
+    build_rss()
     build_sitemap()
     build_404()
     print("완료!")

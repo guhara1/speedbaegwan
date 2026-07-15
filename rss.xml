@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>스피드 배관공사 생활정보</title>
+  <link>https://speedbaegwan.xyz/guides/index.html</link>
+  <atom:link href="https://speedbaegwan.xyz/rss.xml" rel="self" type="application/rss+xml"/>
+  <description>스피드 배관공사 — 배관·누수·하수구 생활정보와 셀프 가이드</description>
+  <language>ko</language>
+  <lastBuildDate>Wed, 15 Jul 2026 09:00:00 +0900</lastBuildDate>
+  <item>
+    <title>변기 막힘, 집에서 뚫는 법과 절대 하면 안 되는 것</title>
+    <link>https://speedbaegwan.xyz/guides/byeongi-makhim-tulnun-beop.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/byeongi-makhim-tulnun-beop.html</guid>
+    <category>막힘</category>
+    <pubDate>Tue, 02 Jun 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[변기가 막혔을 때 집에서 안전하게 뚫는 순서와, 오히려 상황을 악화시키는 금지 행동을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>하수구에서 냄새가 올라올 때 — 원인 5가지와 해결법</title>
+    <link>https://speedbaegwan.xyz/guides/hasugu-naemsae-wonin.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/hasugu-naemsae-wonin.html</guid>
+    <category>막힘</category>
+    <pubDate>Wed, 20 May 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[화장실·싱크대 하수구 냄새의 원인 5가지와 집에서 할 수 있는 해결법, 전문가가 필요한 경우를 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>수도요금이 갑자기 많이 나올 때 — 누수 자가진단 체크리스트</title>
+    <link>https://speedbaegwan.xyz/guides/sudoyogeum-nusu-jindan.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/sudoyogeum-nusu-jindan.html</guid>
+    <category>누수</category>
+    <pubDate>Wed, 06 May 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[수도요금이 평소의 2배 이상 나왔다면 누수를 의심해야 합니다. 집에서 할 수 있는 누수 자가진단 방법을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>싱크대 하수구 막힘 — 원인별로 뚫는 법</title>
+    <link>https://speedbaegwan.xyz/guides/singkeudae-makhim-tulnun-beop.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/singkeudae-makhim-tulnun-beop.html</guid>
+    <category>막힘</category>
+    <pubDate>Fri, 10 Apr 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[싱크대 물이 안 내려갈 때 원인별 해결법과, 재발을 막는 관리 습관을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>세면대·욕실 배수구 막힘 셀프 해결법</title>
+    <link>https://speedbaegwan.xyz/guides/semyeondae-baesugu-makhim.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/semyeondae-baesugu-makhim.html</guid>
+    <category>막힘</category>
+    <pubDate>Wed, 18 Mar 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[머리카락·비누때로 막힌 세면대와 욕실 배수구를 집에서 뚫는 방법과 예방법입니다.]]></description>
+  </item>
+  <item>
+    <title>변기 물이 계속 조금씩 흐를 때 — 원인과 부속 교체</title>
+    <link>https://speedbaegwan.xyz/guides/byeongi-mul-gyesok-heureum.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/byeongi-mul-gyesok-heureum.html</guid>
+    <category>교체</category>
+    <pubDate>Thu, 26 Feb 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[변기 물탱크에서 물이 계속 새면 수도요금이 조용히 늘어납니다. 원인이 되는 부속과 집에서 확인·교체하는 법을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>수도꼭지에서 물이 샐 때 — 원인과 셀프 점검</title>
+    <link>https://speedbaegwan.xyz/guides/sudo-kkokji-mulsaem.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/sudo-kkokji-mulsaem.html</guid>
+    <category>교체</category>
+    <pubDate>Sat, 14 Feb 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[수전 손잡이 아래나 연결부에서 물이 새는 원인과, 집에서 확인할 수 있는 부분을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>누수·하수구 수리 비용은 무엇으로 정해질까</title>
+    <link>https://speedbaegwan.xyz/guides/nusu-makhim-biyong-gaideu.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/nusu-makhim-biyong-gaideu.html</guid>
+    <category>비용</category>
+    <pubDate>Fri, 30 Jan 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[누수탐지·하수구 뚫음·배관공사 비용이 달라지는 요인과, 바가지 없이 견적받는 법을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>세탁기 배수가 안 되거나 역류할 때</title>
+    <link>https://speedbaegwan.xyz/guides/setakgi-baesu-yeongnyu.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/setakgi-baesu-yeongnyu.html</guid>
+    <category>막힘</category>
+    <pubDate>Fri, 16 Jan 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[세탁 중 물이 안 빠지거나 배수구가 역류할 때 원인과 집에서 점검할 부분을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>겨울철 배관 동파 예방법과 얼었을 때 안전하게 녹이는 법</title>
+    <link>https://speedbaegwan.xyz/guides/gyeoul-baegwan-dongpa-yebang.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/gyeoul-baegwan-dongpa-yebang.html</guid>
+    <category>설비</category>
+    <pubDate>Thu, 08 Jan 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[한파에 수도·계량기가 얼지 않도록 예방하는 법과, 이미 얼었을 때 안전하게 녹이는 방법을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>아랫집 천장 누수(층간 누수) — 원인과 슬기로운 대처</title>
+    <link>https://speedbaegwan.xyz/guides/cheunggan-nusu-daecheo.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/cheunggan-nusu-daecheo.html</guid>
+    <category>누수</category>
+    <pubDate>Thu, 18 Dec 2025 09:00:00 +0900</pubDate>
+    <description><![CDATA[아랫집 천장에 물이 새 이웃과 얽혔을 때, 원인 규명과 대처 순서를 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>온수가 안 나올 때 — 원인 구분과 점검</title>
+    <link>https://speedbaegwan.xyz/guides/onsu-an-naol-ttae.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/onsu-an-naol-ttae.html</guid>
+    <category>설비</category>
+    <pubDate>Thu, 04 Dec 2025 09:00:00 +0900</pubDate>
+    <description><![CDATA[냉수는 나오는데 온수만 안 나올 때, 보일러 문제인지 배관 문제인지 구분하는 법입니다.]]></description>
+  </item>
+  <item>
+    <title>하수구 뚫는 약품, 써도 될까? — 주의사항</title>
+    <link>https://speedbaegwan.xyz/guides/hasugu-yakpum-jueui.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/hasugu-yakpum-jueui.html</guid>
+    <category>막힘</category>
+    <pubDate>Thu, 20 Nov 2025 09:00:00 +0900</pubDate>
+    <description><![CDATA[시중 하수구 세정제를 쓸 때의 효과와 한계, 배관·안전상 주의점을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>수압이 약할 때 — 원인과 해결</title>
+    <link>https://speedbaegwan.xyz/guides/supap-yakhal-ttae.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/supap-yakhal-ttae.html</guid>
+    <category>설비</category>
+    <pubDate>Thu, 06 Nov 2025 09:00:00 +0900</pubDate>
+    <description><![CDATA[물이 시원하게 안 나올 때 확인할 원인과 집에서 할 수 있는 조치를 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>이사·인테리어 전 배관 점검 체크리스트</title>
+    <link>https://speedbaegwan.xyz/guides/isa-interior-baegwan-jeomgeom.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/isa-interior-baegwan-jeomgeom.html</guid>
+    <category>설비</category>
+    <pubDate>Wed, 22 Oct 2025 09:00:00 +0900</pubDate>
+    <description><![CDATA[입주·리모델링 전에 배관을 미리 점검하면 분쟁과 재공사를 예방할 수 있습니다. 체크리스트로 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>좋은 배관 업체 고르는 법 — 바가지 안 당하기</title>
+    <link>https://speedbaegwan.xyz/guides/baegwan-upche-goreuneun-beop.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/baegwan-upche-goreuneun-beop.html</guid>
+    <category>정보</category>
+    <pubDate>Wed, 08 Oct 2025 09:00:00 +0900</pubDate>
+    <description><![CDATA[믿을 수 있는 배관 업체를 고르는 기준과, 과잉 수리·바가지를 피하는 팁을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>비데에서 물이 샐 때 — 연결부 점검과 조치</title>
+    <link>https://speedbaegwan.xyz/guides/bide-mulsaem-jueui.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/bide-mulsaem-jueui.html</guid>
+    <category>교체</category>
+    <pubDate>Wed, 24 Sep 2025 09:00:00 +0900</pubDate>
+    <description><![CDATA[비데를 설치했거나 오래 썼더니 바닥에 물이 고일 때, 새는 위치별 원인과 집에서 할 수 있는 조치를 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>보일러 압력이 자꾸 떨어질 때 — 난방 배관 누수 신호</title>
+    <link>https://speedbaegwan.xyz/guides/boiler-apryeok-nanbang-nusu.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/boiler-apryeok-nanbang-nusu.html</guid>
+    <category>설비</category>
+    <pubDate>Wed, 10 Sep 2025 09:00:00 +0900</pubDate>
+    <description><![CDATA[보일러 압력계가 계속 떨어지고 물을 보충해도 또 낮아진다면 난방수 누수를 의심해야 합니다. 확인 방법을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>장마철 하수구 역류 예방과 대처</title>
+    <link>https://speedbaegwan.xyz/guides/jangma-hasugu-yeongnyu-yebang.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/jangma-hasugu-yeongnyu-yebang.html</guid>
+    <category>막힘</category>
+    <pubDate>Thu, 26 Jun 2025 09:00:00 +0900</pubDate>
+    <description><![CDATA[집중호우 때 하수구·배수구가 역류하는 이유와, 장마 전 미리 대비하는 법을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>옥상·베란다·외벽에서 물이 샐 때 — 빗물 누수 구분법</title>
+    <link>https://speedbaegwan.xyz/guides/oksang-beranda-bitmul-nusu.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/oksang-beranda-bitmul-nusu.html</guid>
+    <category>누수</category>
+    <pubDate>Thu, 12 Jun 2025 09:00:00 +0900</pubDate>
+    <description><![CDATA[비 올 때만 천장·벽이 젖는다면 배관이 아니라 방수·외벽 문제일 수 있습니다. 원인 구분과 대처를 정리했습니다.]]></description>
+  </item>
+</channel>
+</rss>
