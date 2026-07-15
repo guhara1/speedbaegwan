@@ -29,8 +29,8 @@ SITE = {
     "brand": "스피드 배관공사",
     "tagline": "전국 24시간 출동 배관·누수·하수구 전문",
     "domain": "https://www.speedbaegwan.co.kr",   # ★ 실제 도메인으로 교체
-    "phone_display": "1668-0000",                 # ★ 실제 대표번호로 교체
-    "phone_tel": "16680000",
+    "phone_display": "010-5183-4300",             # 실제 영업 전화번호
+    "phone_tel": "01051834300",
     "email": "help@speedbaegwan.co.kr",           # ★ 교체
     "ceo": "홍길동",                               # ★ 대표자명
     "biz_no": "000-00-00000",                      # ★ 사업자등록번호
