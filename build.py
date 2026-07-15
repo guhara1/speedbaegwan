@@ -35,6 +35,7 @@ SITE = {
     "biz_no": "000-00-00000",                      # ★ 사업자등록번호
     "addr": "서울특별시 ○○구 ○○로 000",           # ★ 본사 주소
     "hours": "연중무휴 24시간",
+    "emergency": "24시 긴급출동",           # 긴급 출동 어필 문구
     "founded": "2015",
 }
 
@@ -374,7 +375,7 @@ def header(depth=0):
     for slug, short, full, _ in REGIONS:
         reg_links += f'<a href="{p}regions/{slug}.html">{esc(full)}</a>'
     return f'''<div class="topbar"><div class="wrap">
-  <span class="tb-note"><span class="blink"></span>{esc(SITE["hours"])} · 전국 어디든 신속 출동</span>
+  <span class="tb-note"><span class="blink"></span>{esc(SITE["emergency"])} · {esc(SITE["hours"])} · 전화 한 통이면 전국 어디든 즉시 출발</span>
   <span>긴급 문의 <a href="tel:{SITE["phone_tel"]}">{esc(SITE["phone_display"])}</a></span>
 </div></div>
 <header class="site-header"><div class="wrap"><nav class="nav" aria-label="주 메뉴">
@@ -436,6 +437,10 @@ def footer(depth=0):
     <span>본 사이트의 시공 사진·후기는 실제 현장 자료로 교체하여 사용하세요.</span>
   </div>
 </div></footer>
+<a class="em-fab" href="tel:{SITE["phone_tel"]}" aria-label="{esc(SITE["emergency"])} 전화">
+  <span class="em-ring">{ICONS["phone"]}</span>
+  <span class="em-t"><small>{esc(SITE["emergency"])} · 지금 전화</small><b>{esc(SITE["phone_display"])}</b></span>
+</a>
 <script src="{p}assets/js/main.js"></script>
 </body></html>'''
 
@@ -574,9 +579,9 @@ def build_index():
         ["누수탐지부터 공사까지 원스톱", "하수구·변기·싱크대 막힘 즉시 해결", "출동 전 예상 비용 투명 안내", "정품 자재·시공 후 마감 점검"])
     parts.append(f'''<section class="hero"><div class="wrap">
   <div>
-    <span class="eyebrow" style="color:#7FE3EC">전국 24시간 긴급출동</span>
+    <span class="eyebrow" style="color:#7FE3EC">전국 24시 긴급출동 · 전화 즉시 출발</span>
     <h1>물 새고 막혔을 땐,<br><span class="hl">스피드 배관공사</span></h1>
-    <p class="lead">누수탐지·하수구막힘·배관설비·수전/변기 교체까지. 전국 어디든 신속하게 출동해 원인을 정확히 찾고 재발 없이 시공합니다.</p>
+    <p class="lead"><b>24시 긴급출동</b> — 누수탐지·하수구막힘·배관설비·수전/변기 교체까지. 전화 한 통이면 전국 어디든 즉시 출발해 원인을 정확히 찾고 재발 없이 시공합니다.</p>
     <div class="cta-row">
       <a class="btn btn-primary" href="tel:{SITE["phone_tel"]}">{ICONS["phone"]} 지금 전화 상담</a>
       <a class="btn btn-ghost" href="#services">서비스 둘러보기</a>
