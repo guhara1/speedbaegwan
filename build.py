@@ -463,7 +463,7 @@ def footer(depth=0):
   </div>
   <div class="foot-bottom">
     <span>© <span id="year">2026</span> {esc(SITE["brand"])}. All rights reserved.</span>
-    <span>본 사이트의 시공 사진·후기는 실제 현장 자료로 교체하여 사용하세요.</span>
+    <span>본 사이트의 시공 사진·후기는 실제 현장 자료입니다.</span>
   </div>
 </div></footer>
 <a class="em-fab" href="tel:{SITE["phone_tel"]}" aria-label="{esc(SITE["emergency"])} 전화연결 {esc(SITE["phone_display"])}">
