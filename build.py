@@ -419,7 +419,7 @@ def header(depth=0):
       <div class="drop regions"><span class="drop-head">전국 서비스 지역</span>{reg_links}</div>
     </li>
     <li><a href="{p}guides/index.html">생활정보</a></li>
-    <li><a href="{p}index.html#gallery">시공사례</a></li>
+    <li><a href="{p}gallery/index.html">시공사례</a></li>
     <li><a href="{p}index.html#cost">비용안내</a></li>
     <li><a href="{p}index.html#about">회사소개</a></li>
     <li><a href="{p}index.html#faq">자주묻는질문</a></li>
@@ -455,7 +455,7 @@ def footer(depth=0):
     <div><h4>주요 서비스 지역</h4><ul>{reg_links}</ul></div>
     <div><h4>바로가기</h4><ul>
       <li><a href="{p}guides/index.html">배관 생활정보</a></li>
-      <li><a href="{p}index.html#gallery">시공사례</a></li>
+      <li><a href="{p}gallery/index.html">시공사례</a></li>
       <li><a href="{p}index.html#cost">비용안내</a></li>
       <li><a href="{p}index.html#faq">자주묻는질문</a></li>
       <li><a href="tel:{SITE["phone_tel"]}">긴급 상담 전화</a></li>
@@ -864,13 +864,14 @@ def build_index():
   <div style="text-align:center;margin-top:22px"><a class="btn btn-ghost" href="guides/index.html">생활정보 전체 보기 {ICONS["arrow"]}</a></div>
 </div></section>''')
 
-    # 갤러리
-    figs = "".join(f'<figure><img src="{img_src(slug)}" alt="{esc(label)} 시공 사례" loading="lazy" width="800" height="600"><figcaption>{esc(label)}</figcaption></figure>' for label,slug in GALLERY)
+    # 갤러리(미리보기 8장 + 전체 페이지 링크)
+    figs = "".join(f'<figure><img src="{img_src(slug)}" alt="{esc(label)} · {esc(SITE["brand"])} 시공사례" loading="lazy" width="800" height="600"><figcaption>{esc(label)}</figcaption></figure>' for label,slug in GALLERY[:8])
     parts.append(f'''<section class="block mist" id="gallery"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">시공 사례</span>
     <h2>직접 시공한 현장을 확인하세요</h2>
     <p>누수탐지·하수구 고압세척·관로 내시경·배관 교체까지, 실제 현장에서 진행한 시공 사진입니다.</p></div>
   <div class="gallery">{figs}</div>
+  <div style="text-align:center;margin-top:22px"><a class="btn btn-ghost" href="gallery/index.html">시공사례 전체 보기 {ICONS["arrow"]}</a></div>
 </div></section>''')
 
     # 비용
@@ -1920,6 +1921,41 @@ def _ensure_dir(*parts):
     return d
 
 # ─────────────────────────────────────────────
+# 시공사례(갤러리) 별도 페이지
+# ─────────────────────────────────────────────
+def build_gallery():
+    url = "gallery/index.html"
+    title = f"시공사례 갤러리 | {SITE['brand']} 배관·누수·하수구 현장"
+    desc = "누수탐지·하수구 고압세척·관로 내시경·배관 교체 등 스피드 배관공사가 직접 시공한 현장 사진 모음."
+    base = SITE["domain"]
+    imgs_ld = ", ".join(f'"{base}/{img_src(slug)}"' for _, slug in GALLERY)
+    ld = ld_breadcrumb([("홈", "index.html"), ("시공사례", url)])
+    ld += (f'<script type="application/ld+json">{{"@context":"https://schema.org","@type":"ImageGallery",'
+           f'"name":{json.dumps(SITE["brand"]+" 시공사례", ensure_ascii=False)},"url":"{base}/{url}",'
+           f'"image":[{imgs_ld}]}}</script>')
+    figs = "".join(
+        f'<figure><img src="{path_prefix(1)}{img_src(slug)}" alt="{esc(label)} · {esc(SITE["brand"])} 시공사례" loading="lazy" width="800" height="600"><figcaption>{esc(label)}</figcaption></figure>'
+        for label, slug in GALLERY)
+    parts = [head(title, desc, url, extra_ld=ld)]
+    parts.append(header(1))
+    parts.append(f'''<section class="subhero"><div class="wrap">
+  <div class="crumb">{crumb(1, [("홈","index.html"),("시공사례",None)])}</div>
+  <h1>시공사례 갤러리</h1>
+  <p>누수탐지·하수구 고압세척·관로 내시경·배관 교체까지, 스피드 배관공사가 직접 시공한 실제 현장 사진입니다.</p>
+</div></section>
+<section class="block"><div class="wrap"><div class="gallery">{figs}</div></div></section>''')
+    parts.append(f'''<section class="final-cta"><div class="wrap">
+  <span class="eyebrow" style="color:#FFB59A;justify-content:center">지금 바로 상담</span>
+  <h2>우리 현장도 스피드 배관공사에 맡기세요</h2>
+  <p>{esc(SITE["emergency"])} — 전화 한 통이면 전국 어디든 즉시 출발합니다.</p>
+  <a class="big-num" href="tel:{SITE["phone_tel"]}">{ICONS["phone"]} {esc(SITE["phone_display"])}</a>
+</div></section>''')
+    parts.append(footer(1))
+    with open(os.path.join(_ensure_dir("gallery"), "index.html"), "w", encoding="utf-8") as f:
+        f.write(render(1, parts))
+    print("  gallery/index.html (시공사례)")
+
+# ─────────────────────────────────────────────
 # RSS 피드 (생활정보 가이드) — 네이버/구글 제출용
 # ─────────────────────────────────────────────
 def build_rss():
@@ -1974,6 +2010,7 @@ def build_sitemap():
     # core: 메인 + 서비스 + 광역 페이지
     core = [(base + "/", "1.0")]
     core += [(f'{base}/services/{s["slug"]}.html', "0.8") for s in SERVICES]
+    core += [(f'{base}/gallery/index.html', "0.7")]
     core += [(f'{base}/guides/index.html', "0.7")]
     core += [(f'{base}/guides/{g["slug"]}.html', "0.7") for g in GUIDES]
     core += [(f'{base}/{region_url(slug)}', "0.8") for slug,_,_,_ in REGIONS]
@@ -2064,6 +2101,7 @@ if __name__ == "__main__":
     build_units()
     build_dongs()
     build_guides()
+    build_gallery()
     build_rss()
     build_sitemap()
     build_404()
