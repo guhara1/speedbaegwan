@@ -6,7 +6,31 @@
   <atom:link href="https://speedbaegwan.xyz/rss.xml" rel="self" type="application/rss+xml"/>
   <description>스피드 배관공사 — 배관·누수·하수구 생활정보와 셀프 가이드</description>
   <language>ko</language>
-  <lastBuildDate>Thu, 16 Jul 2026 09:00:00 +0900</lastBuildDate>
+  <lastBuildDate>Sun, 26 Jul 2026 09:00:00 +0900</lastBuildDate>
+  <item>
+    <title>에어컨에서 물이 뚝뚝 떨어질 때 — 드레인(배수) 호스 막힘</title>
+    <link>https://speedbaegwan.xyz/guides/aircon-baesu-makhim.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/aircon-baesu-makhim.html</guid>
+    <category>막힘</category>
+    <pubDate>Wed, 22 Jul 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[여름철 에어컨 실내기에서 물이 새는 원인은 대개 냉방 고장이 아니라 배수 호스 막힘입니다. 원인과 집에서 할 수 있는 대처를 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>수도 잠글 때 '쾅' 소리(수격현상)가 날 때 — 원인과 해결</title>
+    <link>https://speedbaegwan.xyz/guides/baegwan-sueum-sugyeok.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/baegwan-sueum-sugyeok.html</guid>
+    <category>설비</category>
+    <pubDate>Wed, 15 Jul 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[수도나 세탁기 밸브를 잠글 때 벽에서 '쾅' 소리와 진동이 난다면 수격현상입니다. 방치하면 누수로 이어지는 이유와 해결법을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>화장실 바닥 배수구에서 물이 안 빠지거나 역류할 때 — 유가 막힘</title>
+    <link>https://speedbaegwan.xyz/guides/hwajangsil-yuga-yeongnyu.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/hwajangsil-yuga-yeongnyu.html</guid>
+    <category>막힘</category>
+    <pubDate>Wed, 08 Jul 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[샤워물이 안 빠지거나 변기 물이 바닥 배수구로 올라온다면 원인 위치가 다릅니다. 유가 청소법과 역류 대처를 정리했습니다.]]></description>
+  </item>
   <item>
     <title>변기 막힘, 집에서 뚫는 법과 절대 하면 안 되는 것</title>
     <link>https://speedbaegwan.xyz/guides/byeongi-makhim-tulnun-beop.html</link>
