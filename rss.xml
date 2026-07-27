@@ -6,7 +6,31 @@
   <atom:link href="https://speedbaegwan.xyz/rss.xml" rel="self" type="application/rss+xml"/>
   <description>스피드 배관공사 — 배관·누수·하수구 생활정보와 셀프 가이드</description>
   <language>ko</language>
-  <lastBuildDate>Sun, 26 Jul 2026 09:00:00 +0900</lastBuildDate>
+  <lastBuildDate>Mon, 27 Jul 2026 09:00:00 +0900</lastBuildDate>
+  <item>
+    <title>음식물처리기(디스포저) 설치 전 알아야 할 배관 상식 — 막힘·규정</title>
+    <link>https://speedbaegwan.xyz/guides/eumsigmul-cheorigi-baegwan.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/eumsigmul-cheorigi-baegwan.html</guid>
+    <category>막힘</category>
+    <pubDate>Sat, 25 Jul 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[음식물처리기를 달면 편리하지만 잘못 쓰면 싱크대 배관이 막힙니다. 종류·막힘 원인·설치 전 확인할 규정을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>정수기·냉장고 직수 연결부 누수 — 안 보이는 곳에서 새는 물 찾기</title>
+    <link>https://speedbaegwan.xyz/guides/jeongsugi-jiksu-nusu.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/jeongsugi-jiksu-nusu.html</guid>
+    <category>누수</category>
+    <pubDate>Fri, 24 Jul 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[정수기·냉장고 직수 호스 연결부는 눈에 안 띄는 곳에 있어 누수를 늦게 발견합니다. 잘 새는 지점과 집에서 확인하는 법을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>수도에서 녹물이 나올 때 — 노후 배관 신호와 교체 시기</title>
+    <link>https://speedbaegwan.xyz/guides/nohu-baegwan-nokmul.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/nohu-baegwan-nokmul.html</guid>
+    <category>설비</category>
+    <pubDate>Thu, 23 Jul 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[아침에 붉은 녹물이 나오거나 수압이 떨어졌다면 노후 배관 신호입니다. 교체 시기 판단과 전체·부분 수리 차이를 정리했습니다.]]></description>
+  </item>
   <item>
     <title>에어컨에서 물이 뚝뚝 떨어질 때 — 드레인(배수) 호스 막힘</title>
     <link>https://speedbaegwan.xyz/guides/aircon-baesu-makhim.html</link>
