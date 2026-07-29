@@ -541,6 +541,16 @@ section.block.mist { background: var(--mist); }
 .guide-card .g-more { margin-top: auto; color: var(--water-deep); font-weight: 700; font-size: 14px;
   display: inline-flex; align-items: center; gap: 5px; }
 .guide-card .g-more svg { width: 15px; height: 15px; }
+.guide-card.has-thumb { padding: 0; overflow: hidden; }
+.guide-card.has-thumb > :not(.g-thumb) { margin-left: 22px; margin-right: 22px; }
+.guide-card.has-thumb .g-cat { margin-top: 18px; }
+.guide-card.has-thumb .g-more { margin-bottom: 20px; }
+.g-thumb { display: block; }
+.g-thumb img { display: block; width: 100%; height: auto; aspect-ratio: 1200/630;
+  object-fit: cover; background: var(--ink); border-bottom: 1px solid var(--line); }
+.g-hero { margin: 22px 0 0; border-radius: var(--radius); overflow: hidden;
+  border: 1px solid rgba(255,255,255,.12); box-shadow: var(--shadow); }
+.g-hero img { display: block; width: 100%; height: auto; aspect-ratio: 1200/630; object-fit: cover; }
 
 .article h2 { font-size: 22px; margin: 30px 0 12px; }
 .article h3 { font-size: 17px; margin: 22px 0 10px; }

@@ -853,7 +853,9 @@ def build_index():
 
     # 생활정보(정보성 롱테일) 링크
     gcards = "".join(
-        f'<a class="guide-card" href="guides/{g["slug"]}.html"><span class="g-cat">{esc(g["cat"])}</span>'
+        f'<a class="guide-card{" has-thumb" if g.get("img") else ""}" href="guides/{g["slug"]}.html">'
+        f'{f"""<span class="g-thumb"><img src="assets/img/{g["img"]}.webp" alt="{esc(g["title"])}" width="1200" height="630" loading="lazy" decoding="async"></span>""" if g.get("img") else ""}'
+        f'<span class="g-cat">{esc(g["cat"])}</span>'
         f'<h3>{esc(g["title"])}</h3><p>{esc(g["desc"])}</p>'
         f'<span class="g-more">자세히 보기 {ICONS["arrow"]}</span></a>' for g in GUIDES[:6])
     parts.append(f'''<section class="block" id="guides"><div class="wrap">
@@ -1334,6 +1336,28 @@ def build_dongs():
 #  slug, title, cat, service(연결 서비스), date(발행), desc, lead, html(본문), faq
 # ─────────────────────────────────────────────
 GUIDES = [
+    {
+        "slug": "susu-chadan-valve", "cat": "긴급", "service": "nusu", "date": "2026-07-29",
+        "img": "guide-susu-chadan-valve",
+        "title": "물이 터졌을 때 1분 안에 잠그는 법 — 우리 집 수도 차단밸브 위치·사용법",
+        "desc": "배관이 터지면 피해 크기는 '얼마나 빨리 물을 잠갔는지'로 갈립니다. 세대 메인 밸브 위치와 잠그는 법, 밸브 고착 점검, 사고 순간 대처 순서를 정리했습니다.",
+        "lead": "물이 터진 순간 밸브를 못 찾아 발만 구르는 분이 많습니다. 사고가 나기 전, 우리 집 차단밸브 위치를 지금 확인해 두세요.",
+        "html": """
+<h2>정작 물이 터지면 다들 밸브부터 찾습니다</h2>
+<p>배관 사고의 피해 크기는 기술이 아니라 <b>물을 얼마나 빨리 잠갔는지</b> 하나로 갈립니다. 사고가 나기 전에 우리 집 차단밸브 위치를 미리 확인해 두는 것이 핵심입니다.</p>
+<h2>차단밸브는 대개 여기 있습니다</h2>
+<ul>
+  <li><b>아파트·오피스텔</b>: 현관 밖 계량기함(PS실), 다용도실, 싱크대 하부장</li>
+  <li><b>빌라·주택</b>: 계량기 박스, 대문 옆, 보일러실</li>
+</ul>
+<h2>지금 한 번 돌려보세요</h2>
+<p>몇 년간 안 돌린 밸브는 굳어서, 정작 급할 때 손잡이가 부러지기도 합니다. 오늘 살살 한 번 돌려 보고, 뻑뻑하면 미리 교체해 두세요.</p>
+""",
+        "faq": [
+            ("메인 밸브와 앵글밸브 중 뭘 잠가야 하나요?", "어디서 새는지 모르거나 밤중에 갑자기 터졌다면 계량기 옆 '세대 메인 밸브'부터 잠급니다. 변기·세면대처럼 한 기구만 문제면 그 기구의 작은 앵글밸브만 잠그면 나머지 물은 그대로 쓸 수 있습니다."),
+            ("밸브가 굳어서 안 돌아가요.", "억지로 힘주면 손잡이나 밸브가 부러져 물이 더 쏟아질 수 있습니다. 사고 전이라면 미리 교체해 두고, 이미 새는 상황이면 관리실에 공용 라인 차단을 요청한 뒤 전문가의 도움을 받으세요."),
+        ],
+    },
     {
         "slug": "byeongi-makhim-tulnun-beop", "cat": "막힘", "service": "makhim", "date": "2026-06-02",
         "title": "변기 막힘, 집에서 뚫는 법과 절대 하면 안 되는 것",
@@ -1993,8 +2017,11 @@ def build_guides():
     ld = ld_breadcrumb([("홈", "index.html"), ("생활정보", url)])
     cards = ""
     for g in GUIDES:
-        cards += (f'<a class="guide-card" href="{q(g["slug"])}.html">'
-                  f'<span class="g-cat">{esc(g["cat"])}</span>'
+        thumb = (f'<span class="g-thumb"><img src="{p1}assets/img/{g["img"]}.webp" '
+                 f'alt="{esc(g["title"])}" width="1200" height="630" loading="lazy" decoding="async"></span>'
+                 if g.get("img") else "")
+        cards += (f'<a class="guide-card{" has-thumb" if g.get("img") else ""}" href="{q(g["slug"])}.html">'
+                  f'{thumb}<span class="g-cat">{esc(g["cat"])}</span>'
                   f'<h3>{esc(g["title"])}</h3><p>{esc(g["desc"])}</p>'
                   f'<span class="g-more">자세히 보기 {ICONS["arrow"]}</span></a>')
     parts = [head(title, desc, url, extra_ld=ld)]
@@ -2028,13 +2055,18 @@ def build_guides():
         # 관련 글(다른 가이드) 링크
         rel = [x for x in GUIDES if x["slug"] != g["slug"]][:3]
         rel_links = "".join(f'<li>{ICONS["doc"]}<a href="{q(x["slug"])}.html">{esc(x["title"])}</a></li>' for x in rel)
-        parts = [head(gtitle, g["desc"], gurl, extra_ld=ld)]
+        og = f'assets/img/{g["img"]}.jpg' if g.get("img") else None
+        parts = [head(gtitle, g["desc"], gurl, og_img=og, extra_ld=ld)]
         parts.append(header(1))
+        hero_fig = (f'''<figure class="g-hero"><img src="{p1}assets/img/{g["img"]}.webp" '
+                    f'alt="{esc(g["title"])}" width="1200" height="630" fetchpriority="high" decoding="async"></figure>'''
+                    if g.get("img") else "")
         parts.append(f'''<section class="subhero"><div class="wrap">
   <div class="crumb">{crumb(1, [("홈","index.html"),("생활정보","guides/index.html"),(g["cat"],None)])}</div>
   <h1>{esc(g["title"])}</h1>
   <p>{esc(g["lead"])}</p>
   <div class="g-meta">{ICONS["clock"]} 최종 업데이트 {esc(BUILD_DATE)} · 작성·감수 <a href="{p1}index.html#about">{esc(SITE["brand"])} 현장팀</a> · 배관 시공 경력 10년+</div>
+  {hero_fig}
 </div></section>''')
         parts.append(f'''<section class="block"><div class="wrap two-col">
   <article class="prose article">{guide_body(g)}

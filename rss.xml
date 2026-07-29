@@ -6,7 +6,15 @@
   <atom:link href="https://speedbaegwan.xyz/rss.xml" rel="self" type="application/rss+xml"/>
   <description>스피드 배관공사 — 배관·누수·하수구 생활정보와 셀프 가이드</description>
   <language>ko</language>
-  <lastBuildDate>Mon, 27 Jul 2026 09:00:00 +0900</lastBuildDate>
+  <lastBuildDate>Wed, 29 Jul 2026 09:00:00 +0900</lastBuildDate>
+  <item>
+    <title>물이 터졌을 때 1분 안에 잠그는 법 — 우리 집 수도 차단밸브 위치·사용법</title>
+    <link>https://speedbaegwan.xyz/guides/susu-chadan-valve.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/susu-chadan-valve.html</guid>
+    <category>긴급</category>
+    <pubDate>Wed, 29 Jul 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[배관이 터지면 피해 크기는 '얼마나 빨리 물을 잠갔는지'로 갈립니다. 세대 메인 밸브 위치와 잠그는 법, 밸브 고착 점검, 사고 순간 대처 순서를 정리했습니다.]]></description>
+  </item>
   <item>
     <title>음식물처리기(디스포저) 설치 전 알아야 할 배관 상식 — 막힘·규정</title>
     <link>https://speedbaegwan.xyz/guides/eumsigmul-cheorigi-baegwan.html</link>
