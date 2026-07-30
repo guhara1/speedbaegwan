@@ -6,7 +6,31 @@
   <atom:link href="https://speedbaegwan.xyz/rss.xml" rel="self" type="application/rss+xml"/>
   <description>스피드 배관공사 — 배관·누수·하수구 생활정보와 셀프 가이드</description>
   <language>ko</language>
-  <lastBuildDate>Wed, 29 Jul 2026 09:00:00 +0900</lastBuildDate>
+  <lastBuildDate>Thu, 30 Jul 2026 09:00:00 +0900</lastBuildDate>
+  <item>
+    <title>아랫집에서 누수 연락이 왔을 때 — 책임 확인과 대처 순서</title>
+    <link>https://speedbaegwan.xyz/guides/arutjip-nusu-daecheo.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/arutjip-nusu-daecheo.html</guid>
+    <category>누수</category>
+    <pubDate>Thu, 30 Jul 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[천장 누수라고 무조건 윗집 책임은 아닙니다. 그 자리에서 인정하면 안 되는 이유, 원인 규명·보험·복구까지 손해 안 보는 순서를 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>화장실에 작은 날벌레가 계속 생길 때 — 하수구 나방파리 없애는 법</title>
+    <link>https://speedbaegwan.xyz/guides/bangbang-pari-hasugu.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/bangbang-pari-hasugu.html</guid>
+    <category>막힘</category>
+    <pubDate>Thu, 30 Jul 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[화장실 벽에 붙는 작은 벌레는 초파리가 아니라 하수구에서 번식하는 나방파리입니다. 약을 뿌려도 안 없어지는 이유와 근본 청소법을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>세면대 아래에서 물이 샐 때 — P트랩 누수 직접 잡는 법</title>
+    <link>https://speedbaegwan.xyz/guides/semyeondae-ptrap-nusu.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/semyeondae-ptrap-nusu.html</guid>
+    <category>설비</category>
+    <pubDate>Thu, 30 Jul 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[세면대 밑 누수는 대부분 벽 속이 아니라 P트랩 연결부에서 샙니다. 새는 지점 찾는 법과 부품 교체 없이 직접 잡는 순서를 정리했습니다.]]></description>
+  </item>
   <item>
     <title>물이 터졌을 때 1분 안에 잠그는 법 — 우리 집 수도 차단밸브 위치·사용법</title>
     <link>https://speedbaegwan.xyz/guides/susu-chadan-valve.html</link>
