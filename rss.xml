@@ -6,7 +6,31 @@
   <atom:link href="https://speedbaegwan.xyz/rss.xml" rel="self" type="application/rss+xml"/>
   <description>스피드 배관공사 — 배관·누수·하수구 생활정보와 셀프 가이드</description>
   <language>ko</language>
-  <lastBuildDate>Thu, 30 Jul 2026 09:00:00 +0900</lastBuildDate>
+  <lastBuildDate>Fri, 31 Jul 2026 09:00:00 +0900</lastBuildDate>
+  <item>
+    <title>싱크대가 자꾸 막히는 진짜 이유 — 기름때, 이렇게 관리하세요</title>
+    <link>https://speedbaegwan.xyz/guides/singkeudae-gireumtae-gwanri.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/singkeudae-gireumtae-gwanri.html</guid>
+    <category>막힘</category>
+    <pubDate>Fri, 31 Jul 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[주방 막힘의 진짜 원인은 음식물이 아니라 관 안쪽에 굳는 기름입니다. 뜨거운 물이 오히려 문제인 이유, 기름 버리는 법, 다시 안 막히게 하는 습관을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>세탁기 급수 호스, 터지기 전에 바꾸세요 — 침수 사고 막는 점검법</title>
+    <link>https://speedbaegwan.xyz/guides/setakgi-geubsu-hose.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/setakgi-geubsu-hose.html</guid>
+    <category>누수</category>
+    <pubDate>Fri, 31 Jul 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[외출 중 집이 잠기는 사고의 흔한 원인이 세탁기 급수 호스입니다. 24시간 수압을 받는 이 호스의 위험 신호, 교체 주기, 침수를 막는 습관을 정리했습니다.]]></description>
+  </item>
+  <item>
+    <title>며칠 집 비울 때, 수도 이렇게 하고 가세요 — 부재 중 배관 체크리스트</title>
+    <link>https://speedbaegwan.xyz/guides/janggi-buje-sudo.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/janggi-buje-sudo.html</guid>
+    <category>설비</category>
+    <pubDate>Fri, 31 Jul 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[누수 사고는 방치 시간이 피해를 정합니다. 여행·출장 등 장기 부재 전 수도 잠그는 법, 돌아왔을 때 나는 하수구 냄새(봉수 마름)와 겨울 동파 대비를 정리했습니다.]]></description>
+  </item>
   <item>
     <title>아랫집에서 누수 연락이 왔을 때 — 책임 확인과 대처 순서</title>
     <link>https://speedbaegwan.xyz/guides/arutjip-nusu-daecheo.html</link>
