@@ -6,7 +6,15 @@
   <atom:link href="https://speedbaegwan.xyz/rss.xml" rel="self" type="application/rss+xml"/>
   <description>스피드 배관공사 — 배관·누수·하수구 생활정보와 셀프 가이드</description>
   <language>ko</language>
-  <lastBuildDate>Sat, 01 Aug 2026 09:00:00 +0900</lastBuildDate>
+  <lastBuildDate>Sun, 02 Aug 2026 09:00:00 +0900</lastBuildDate>
+  <item>
+    <title>밤에 벽에서 물소리가 들릴 때 — 안 보이는 누수 찾는 법</title>
+    <link>https://speedbaegwan.xyz/guides/byeok-mulsori-sumeun-nusu.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/byeok-mulsori-sumeun-nusu.html</guid>
+    <category>누수</category>
+    <pubDate>Sun, 02 Aug 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[아무도 물을 안 쓰는데 벽·바닥에서 물소리가 나면 어딘가 계속 새고 있다는 신호입니다. 계량기로 진짜 누수인지 5분 확인하는 법과 위치 좁히는 단서를 정리했습니다.]]></description>
+  </item>
   <item>
     <title>변기 밑에서 물이 새고 냄새가 날 때 — 바닥 개스킷 문제</title>
     <link>https://speedbaegwan.xyz/guides/byeongi-badak-nusu-gasket.html</link>
