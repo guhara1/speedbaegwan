@@ -6,7 +6,15 @@
   <atom:link href="https://speedbaegwan.xyz/rss.xml" rel="self" type="application/rss+xml"/>
   <description>스피드 배관공사 — 배관·누수·하수구 생활정보와 셀프 가이드</description>
   <language>ko</language>
-  <lastBuildDate>Sun, 02 Aug 2026 09:00:00 +0900</lastBuildDate>
+  <lastBuildDate>Wed, 05 Aug 2026 09:00:00 +0900</lastBuildDate>
+  <item>
+    <title>수돗물에서 이상한 냄새·맛이 날 때 — 원인 구분과 대처</title>
+    <link>https://speedbaegwan.xyz/guides/sudonmul-naemsae-mat.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/sudonmul-naemsae-mat.html</guid>
+    <category>설비</category>
+    <pubDate>Mon, 03 Aug 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[소독약·흙·비린내 등 물맛 이상은 종류에 따라 원인이 다릅니다. 냄새 종류로 원인 좁히는 법, 흘려보내기로 되는 것과 배관·물탱크 점검이 필요한 것을 정리했습니다.]]></description>
+  </item>
   <item>
     <title>밤에 벽에서 물소리가 들릴 때 — 안 보이는 누수 찾는 법</title>
     <link>https://speedbaegwan.xyz/guides/byeok-mulsori-sumeun-nusu.html</link>
