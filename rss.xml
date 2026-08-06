@@ -6,7 +6,15 @@
   <atom:link href="https://speedbaegwan.xyz/rss.xml" rel="self" type="application/rss+xml"/>
   <description>스피드 배관공사 — 배관·누수·하수구 생활정보와 셀프 가이드</description>
   <language>ko</language>
-  <lastBuildDate>Wed, 05 Aug 2026 09:00:00 +0900</lastBuildDate>
+  <lastBuildDate>Thu, 06 Aug 2026 09:00:00 +0900</lastBuildDate>
+  <item>
+    <title>변기 물이 넘칠 것처럼 차오를 때 — 당황하지 않고 넘침 막는 법</title>
+    <link>https://speedbaegwan.xyz/guides/byeongi-neomchim-eunggeup.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/byeongi-neomchim-eunggeup.html</guid>
+    <category>막힘</category>
+    <pubDate>Tue, 04 Aug 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[막힌 변기가 차오를 때 레버를 또 누르면 그대로 넘칩니다. 탱크 마개·급수 밸브로 넘침을 멈추는 응급 순서와 밸브 위치를 미리 알아두는 법을 정리했습니다.]]></description>
+  </item>
   <item>
     <title>수돗물에서 이상한 냄새·맛이 날 때 — 원인 구분과 대처</title>
     <link>https://speedbaegwan.xyz/guides/sudonmul-naemsae-mat.html</link>
