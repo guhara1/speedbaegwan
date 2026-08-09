@@ -6,7 +6,15 @@
   <atom:link href="https://speedbaegwan.xyz/rss.xml" rel="self" type="application/rss+xml"/>
   <description>스피드 배관공사 — 배관·누수·하수구 생활정보와 셀프 가이드</description>
   <language>ko</language>
-  <lastBuildDate>Thu, 06 Aug 2026 09:00:00 +0900</lastBuildDate>
+  <lastBuildDate>Sun, 09 Aug 2026 09:00:00 +0900</lastBuildDate>
+  <item>
+    <title>물을 잠갔는데 안 멈추거나 밸브에서 샐 때 — 중간밸브(앵글밸브) 문제와 대처</title>
+    <link>https://speedbaegwan.xyz/guides/junggan-valve-anjamgim.html</link>
+    <guid isPermaLink="true">https://speedbaegwan.xyz/guides/junggan-valve-anjamgim.html</guid>
+    <category>설비</category>
+    <pubDate>Thu, 06 Aug 2026 09:00:00 +0900</pubDate>
+    <description><![CDATA[수전·변기 수리의 첫 관문은 중간밸브 잠그기입니다. 안 잠기거나 뻑뻑하거나 축에서 샐 때의 상황별 대처와, 억지로 돌리면 안 되는 이유·교체 순서를 정리했습니다.]]></description>
+  </item>
   <item>
     <title>욕실 실리콘에 곰팡이가 슬고 벌어질 때 — 방치하면 안 되는 이유와 재시공</title>
     <link>https://speedbaegwan.xyz/guides/yoksil-silicone-gompangi.html</link>
